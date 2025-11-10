@@ -9,7 +9,6 @@ class ContactService {
 
   async createContact(name: string, email: string, phone: string, userId: number){
     appLog.debug("Contact Service: createContact called")
-
     appLog.debug({name, email, phone, userId})
     try {
       const contact = await this.contactRepository.create(name, email, phone, userId)
@@ -37,6 +36,10 @@ class ContactService {
   }
 
   async deleteContact(id: number){
+    const existingContact = await this.contactRepository.findByID(id)
+    if(!existingContact){
+      throw new AppError(404, "Contact not found")
+    }
     await this.contactRepository.delete(id)
     return true
   }

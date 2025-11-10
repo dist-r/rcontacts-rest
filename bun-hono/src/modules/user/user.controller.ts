@@ -32,13 +32,11 @@ export default class UserController {
 
   async profile(c: Context) {
     const userId = c.get("userId")
-
     appLog.debug({userId})
     try {
       const user = await this.userService.profileUser(userId)
       const {password, ...userWithoutPassword} = user
       return c.json(userWithoutPassword)
-     
     } catch (error) {
       throw error
     }

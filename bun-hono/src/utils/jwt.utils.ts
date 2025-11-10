@@ -12,16 +12,21 @@ export default class JwtUtils {
   
   static async generateToken(id: number, email: string){
     const payload : Payload = {id, email, exp: Math.floor(Date.now() / 1000) + (60 * 60)}
-    const token = await sign(payload, JwtUtils.secret)
-    return token
+    try {
+      const token = await sign(payload, JwtUtils.secret)
+      return token
+    } catch (error) {
+      throw error
+    }
   }
 
   static async verifyToken(token: string){
-    const payload = await verify(token, JwtUtils.secret)
-    if (!payload) {
-      return false
+    try {
+      const payload = await verify(token, JwtUtils.secret)
+      return payload as Payload
+    } catch (error) {
+      throw error
     }
-    return payload as Payload
   }
   
 }

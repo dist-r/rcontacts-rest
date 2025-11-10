@@ -13,11 +13,7 @@ export default class UserService {
     if (existingUser) {
       throw new AppError(400, "User already exists")
     }
-    const bcryptHash = await Bun.password.hash(password,{
-      algorithm: "bcrypt",
-      cost: 10
-    });
-
+    const bcryptHash = await HashUtils.hashedPassword(password)
     await this.userRepository.create(username, name, email, bcryptHash)
   }
 

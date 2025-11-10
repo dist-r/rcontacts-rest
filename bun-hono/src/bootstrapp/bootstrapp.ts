@@ -1,6 +1,8 @@
 import { Context, Hono } from "hono";
 import { StatusCode } from "hono/utils/http-status";
 import {logger} from "hono/logger"
+import {cors} from "hono/cors"
+
 
 import poolPg from "../config/postgres.raw";
 
@@ -35,7 +37,8 @@ function bootstrapp () {
 
   // GLOBAL Middlewar
   app.use(logger())
-
+  app.use(cors())
+  
   // WIRING DEPENDENCY
   // REPO
   const userRepository = new PostgresUserRepository(poolPg)

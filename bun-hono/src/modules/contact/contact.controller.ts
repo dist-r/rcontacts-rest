@@ -27,7 +27,6 @@ class ContactController {
       const contact = await this.contactService.createContact(name, email, phone, userId)
       return c.json(contact)
     } catch (error) {
-      console.log(error)
       throw error
     }
   }
@@ -59,7 +58,6 @@ class ContactController {
       const updatedContact = await this.contactService.updateContact(Number(id), contact)
       return c.json(updatedContact)
     } catch (error) {
-      console.log(error)
       throw error
     }
   }
@@ -68,10 +66,9 @@ class ContactController {
     const id = c.req.param('id')
     try {
       await this.contactService.deleteContact(Number(id))
-      c.status(204)
-      return c.json(null)
+      c.status(200)
+      return c.json({message: "Contact deleted successfully"})
     } catch (error) {
-      console.log(error)
       throw error
     }
   }

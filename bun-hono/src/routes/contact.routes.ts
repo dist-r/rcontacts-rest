@@ -10,5 +10,4 @@ export default function contactRoutes(app: Hono, contactController: ContactContr
  contactRoutes.get("/", contactController.findAllContact.bind(contactController))
  contactRoutes.put("/:id", contactController.updateContact.bind(contactController))
  contactRoutes.delete("/:id", contactController.deleteContact.bind(contactController))
-
 }

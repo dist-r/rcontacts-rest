@@ -20,7 +20,6 @@ export default class AuthMiddleware {
       c.set('email', payload.email)
       await next()
     } catch (err) {
-      console.error('JWT verification error:', err)
       return c.json({ message: 'Unauthorized' }, 401)
     }
   }

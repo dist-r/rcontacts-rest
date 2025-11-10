@@ -8,8 +8,16 @@ class InMemoryContactRepository implements ContactRepository {
     this.contacts = []
   }
 
-  async create(contact: Contact): Promise<void> {
+  async create(name: string, email: string, phone: string, userId: number): Promise<Contact> {
+    const contact = {
+      id: this.contacts.length + 1,
+      name,
+      email,
+      phone,
+      userId
+    }
     this.contacts.push(contact)
+    return contact
   }
 
   async findByID(id: number): Promise<Contact | undefined> {
@@ -21,11 +29,16 @@ class InMemoryContactRepository implements ContactRepository {
     return userContacts.length > 0 ? userContacts : undefined;
   }
 
-  async update(contact: Contact): Promise<void> {
-    const index = this.contacts.findIndex(c => c.id === contact.id)
-    if (index !== -1) {
-      this.contacts[index] = contact
+  async update(id: number, contact: Partial<Contact>): Promise<Contact | undefined> {
+    const index = this.contacts.findIndex(c => c.id === id)
+    if (index === -1) {
+      return undefined
     }
+    this.contacts[index] = {
+      ...this.contacts[index],
+      ...contact
+    }
+    return this.contacts[index]
   }
 
   async delete(id: number): Promise<void> {
