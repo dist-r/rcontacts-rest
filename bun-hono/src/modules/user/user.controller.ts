@@ -41,5 +41,4 @@ export default class UserController {
       throw error
     }
   }
-
 }
