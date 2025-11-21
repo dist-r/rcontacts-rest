@@ -8,7 +8,7 @@ import (
 
 func TestRegisterUser_Success(t *testing.T) {
 	mockRepo := &MockUserRepository{
-		// email belum dipakai → tidak ditemukan
+
 		GetUserByEmailFunc: func(ctx context.Context, email string) (*User, error) {
 			return nil, nil
 		},
