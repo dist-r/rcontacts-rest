@@ -1,5 +1,6 @@
 name: CI/CD Go Fiber
 
+
 on:
   workflow_dispatch:
     inputs:
@@ -9,7 +10,6 @@ on:
         default: "latest"
 
 jobs:
-
   test:
     name: Run Go Unit Tests
     runs-on: ubuntu-latest
@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
 
       - name: Setup Go
         uses: actions/setup-go@v5
