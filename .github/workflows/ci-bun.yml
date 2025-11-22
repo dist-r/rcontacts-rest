@@ -10,17 +10,22 @@ on:
 
 jobs:
   test:
-    name: Run Go Unit Tests
+    name: Run Bun Unit Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          go-version: "1.22"
+          bun-version: "1.3.1"
+
+      - name: Install dependencies
+        run: |
+          cd bun-hono
+          bun install
 
       - name: Run tests
         run: |
