@@ -8,7 +8,15 @@ class InMemoryUserRepository implements UserRepository{
     this.users = []
   }
 
-  async create(user: any): Promise<void> {
+  async create(username: string, name: string, email: string, password: string): Promise<void> {
+    
+    const user = {
+      id: this.users.length + 1,
+      username,
+      name,
+      email,
+      password
+    }
     this.users.push(user)
   }
 
