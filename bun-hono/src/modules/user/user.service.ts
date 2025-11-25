@@ -42,7 +42,12 @@ export default class UserService {
     if (!user) {
       throw new AppError(404, "User not found")
     }
-    return user
+    return {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      email: user.email
+    }
    } catch (error) {
     throw error
    }

@@ -36,8 +36,14 @@ export default class UserController {
     appLog.debug({userId})
     try {
       const user = await this.userService.profileUser(userId)
-      const {password, ...userWithoutPassword} = user
-      return c.json(userWithoutPassword)
+      
+      return c.json({
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        email: user.email
+      })
+      
     } catch (error) {
       throw error
     }
