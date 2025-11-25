@@ -1,7 +1,7 @@
 import {sign , verify } from "hono/jwt"
 
 type Payload = {
-  id: number
+  id: string
   email: string
   exp?: number
 }
@@ -10,7 +10,7 @@ export default class JwtUtils {
 
   // private static secret = process.env.JWT_SECRET as string
   
-  static async generateToken(id: number, email: string){
+  static async generateToken(id: string, email: string){
     const secret = process.env.JWT_SECRET as string
     const payload : Payload = {id, email, exp: Math.floor(Date.now() / 1000) + (60 * 60)}
     try {

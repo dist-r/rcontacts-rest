@@ -8,6 +8,7 @@ export default class UserController {
   constructor(private userService: UserService){}
 
   async register(c: Context) {
+    appLog.debug("Register User Controller Called")
     const {username, name, email, password} = await c.req.json()
     if (!username || !name || !email || !password) {
       throw new AppError(400, "Missing required fields")

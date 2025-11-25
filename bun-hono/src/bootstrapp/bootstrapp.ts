@@ -3,12 +3,20 @@ import { StatusCode } from "hono/utils/http-status";
 import {logger} from "hono/logger"
 import {cors} from "hono/cors"
 
+// PG ENVIRONTMENT
+// import db from "../config/postgres.raw";
+// MONGO ENVIRONTMENT 
+import { connectMongo } from "../config/mongo.db";
 
-import poolPg from "../config/postgres.raw";
+// PG IMPLEMENTS
+// import PostgresUserRepository from "../repository/raw/pg.user";
+// import PostgresContactRepository from "../repository/raw/pg.contact";
 
-import PostgresUserRepository from "../repository/raw/pg.user";
-import PostgresContactRepository from "../repository/raw/pg.contact";
+// MONGO IMPLMENTS
+import MongoUserRepository from "../repository/nosql/mongo.user";
+import MongoContactRepository from "../repository/nosql/mongo.contact";
 
+// PG RAW IMPLEMENTS
 import UserController from "../modules/user/user.controller";
 import ContactController from "../modules/contact/contact.controller";
 
@@ -21,7 +29,9 @@ import userRoutes from "../routes/user.routes";
 
 import AppError from "../common/api.error";
 
-function bootstrapp () {
+async function bootstrapp () {
+  const db = await connectMongo()
+
   const app = new Hono()
 
   app.onError((err: Error, c: Context) => {
@@ -40,10 +50,13 @@ function bootstrapp () {
   app.use(cors())
   
   // WIRING DEPENDENCY
-  // REPO
-  const userRepository = new PostgresUserRepository(poolPg)
-  const contactRepository = new PostgresContactRepository(poolPg)
+  // REPO POSTGRESS
+  // const userRepository = new PostgresUserRepository(poolPg)
+  // const contactRepository = new PostgresContactRepository(poolPg)
 
+  // REPO MONGO
+  const userRepository = new MongoUserRepository(db)
+  const contactRepository = new MongoContactRepository(db)
   // SERVICE
   const userService = new UserService(userRepository)
   const contactService = new ContactService(contactRepository)

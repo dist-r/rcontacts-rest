@@ -24,8 +24,10 @@ class ContactController {
       throw new AppError(404, "User not found")
     }
     try {
-      const contact = await this.contactService.createContact(name, email, phone, userId)
-      return c.json(contact)
+      await this.contactService.createContact(name, email, phone, userId)
+      return c.json({
+        "message" : "Create contact was a succesfully"
+      })
     } catch (error) {
       throw error
     }
@@ -55,7 +57,7 @@ class ContactController {
     }
 
     try {
-      const updatedContact = await this.contactService.updateContact(Number(id), contact)
+      const updatedContact = await this.contactService.updateContact(id, contact)
       return c.json(updatedContact)
     } catch (error) {
       throw error
@@ -65,7 +67,7 @@ class ContactController {
   async deleteContact(c: Context) {
     const id = c.req.param('id')
     try {
-      await this.contactService.deleteContact(Number(id))
+      await this.contactService.deleteContact(id)
       c.status(200)
       return c.json({message: "Contact deleted successfully"})
     } catch (error) {

@@ -10,6 +10,16 @@ services:
     volumes:
       - ../../migration:/docker-entrypoint-initdb.d
 
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    env_file:
+      - ../.env
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - ./mongo-init:/docker-entrypoint-initdb.d 
+
   app:
     build:
       context: ..

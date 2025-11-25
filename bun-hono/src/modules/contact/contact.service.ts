@@ -7,7 +7,7 @@ class ContactService {
   
   constructor(private contactRepository: ContactRepository) {}
 
-  async createContact(name: string, email: string, phone: string, userId: number){
+  async createContact(name: string, email: string, phone: string, userId: string){
     appLog.debug("Contact Service: createContact called")
     appLog.debug({name, email, phone, userId})
     try {
@@ -18,7 +18,7 @@ class ContactService {
     }
   }
 
-  async findAllContact(userId: number){
+  async findAllContact(userId: string){
     const contacts = await this.contactRepository.findAll(userId)
     if (!contacts) {
       throw new AppError(404, "Contacts not found")
@@ -26,7 +26,7 @@ class ContactService {
     return contacts
   }
 
-  async updateContact(id: number, contact: Partial<Contact>){
+  async updateContact(id: string, contact: Partial<Contact>){
     const existingContact = await this.contactRepository.findByID(id)
     if (!existingContact) {
       throw new AppError(404, "Contact not found")
@@ -35,7 +35,7 @@ class ContactService {
     return updatedContact
   }
 
-  async deleteContact(id: number){
+  async deleteContact(id: string){
     const existingContact = await this.contactRepository.findByID(id)
     if(!existingContact){
       throw new AppError(404, "Contact not found")
