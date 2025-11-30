@@ -18,7 +18,7 @@ func (cs *ContactService) CreateContact(ctx context.Context, contact *Contact) e
 	return nil
 }
 
-func (cs *ContactService) FindAllContact(ctx context.Context, userID int) ([]*Contact, error) {
+func (cs *ContactService) FindAllContact(ctx context.Context, userID string) ([]*Contact, error) {
 	contacts, err := cs.repo.GetAllContactsByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (cs *ContactService) UpdateContact(ctx context.Context, contact *Contact) e
 	return nil
 }
 
-func (cs *ContactService) DeleteContact(ctx context.Context, id int) error {
+func (cs *ContactService) DeleteContact(ctx context.Context, id string) error {
 	err := cs.repo.DeleteContact(ctx, id)
 	if err != nil {
 		return err

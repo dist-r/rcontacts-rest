@@ -33,7 +33,7 @@ func TestRegisterUser_Success(t *testing.T) {
 func TestRegisterUser_UserExists(t *testing.T) {
 	mockRepo := &MockUserRepository{
 		GetUserByEmailFunc: func(ctx context.Context, email string) (*User, error) {
-			return &User{ID: 1, Email: email}, nil
+			return &User{ID: "12", Email: email}, nil
 		},
 	}
 

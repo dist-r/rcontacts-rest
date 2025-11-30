@@ -10,7 +10,7 @@ import (
 )
 
 type Claims struct {
-	UserID int    `json:"user_id"`
+	UserID string `json:"user_id"`
 	Email  string `json:"email"`
 	jwt.RegisteredClaims
 }
@@ -20,7 +20,7 @@ var secretAccess = []byte(os.Getenv("JWT_SECRET"))
 // var secretRefresh = []byte(os.Getenv("JWT_SECRET_REFRESH"))
 
 // ACCESSS TOKEN
-func GenerateToken(userId int, email string) (string, error) {
+func GenerateToken(userId string, email string) (string, error) {
 	claims := &Claims{
 		UserID: userId,
 		Email:  email,

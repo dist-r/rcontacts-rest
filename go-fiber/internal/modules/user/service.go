@@ -66,7 +66,7 @@ func (u *UserService) LoginUser(ctx context.Context, email string, password stri
 	return token, nil
 }
 
-func (u *UserService) GetUserProfile(ctx context.Context, id int) (*User, error) {
+func (u *UserService) GetUserProfile(ctx context.Context, id string) (*User, error) {
 	user, err := u.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return nil, err

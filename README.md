@@ -12,14 +12,9 @@
 ![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
-![Javalin](https://img.shields.io/badge/Javalin-4B8BBE?style=for-the-badge&logo=java&labelColor=4B8BBE)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-0EA5A8?style=for-the-badge&logo=prisma&logoColor=white)
-![Drizzle](https://img.shields.io/badge/Drizzle-7C3AED?style=for-the-badge&logo=drizzle&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-31648A?style=for-the-badge&logo=sqlalchemy&logoColor=white)
-![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
+
 ![Raw SQL](https://img.shields.io/badge/Raw--SQL-gray?style=for-the-badge&logo=postgresql&logoColor=white)
 
 Repository containing REST API implementations for a contact-management app (`rcontacts-rest`). There are multiple server implementations in this repo:
@@ -27,7 +22,7 @@ Repository containing REST API implementations for a contact-management app (`rc
 - `bun-hono` – TypeScript implementation using Bun + Hono.
 - `go-fiber` – Go implementation using Fiber.
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
-- `java-javalin` – Java implementation using Javalin (coming soon).
+- `java-spring` – Java implementation using Javalin (coming soon).
 
 **Client implementation:** https://github.com/dist-r/rcontacts-client
 
@@ -40,7 +35,7 @@ rcontacts-rest/
 ├── bun-hono/           # Bun + Hono (TypeScript)
 ├── go-fiber/           # Go + Fiber (Go)
 ├── python-fastapi/     # Python + FastAPI (coming soon)
-├── java-javalin/       # Java + Javalin (coming soon)
+├── java-spring-boot/       # Java + Javalin (coming soon)
 ├── docs/               # OpenAPI / API docs
 ├── migration/          # SQL migration scripts
 └── README.md
@@ -54,7 +49,7 @@ Berikut teknologi, framework, database, dan ORM yang ada atau direncanakan untuk
 	- ![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun) `bun-hono` (TypeScript)
 	- ![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white) `go-fiber` (Go)
 	- ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) `python-fastapi` (FastAPI) — coming soon
-	- ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white) `java-javalin` (Javalin) — coming soon
+	- ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white) `java-sping-boot` (Javalin) — coming soon
 
 - Databases:
 	- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) PostgreSQL

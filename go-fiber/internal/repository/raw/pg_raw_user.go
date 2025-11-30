@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/dist-r/rcontacts-rest/go-fiber/internal/modules/user"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -17,15 +18,16 @@ func NewPGRawUserRepository(db *pgxpool.Pool) user.UserRepository {
 }
 
 func (r *PGRawUserRepository) CreateUser(ctx context.Context, u *user.User) error {
+	u.ID = uuid.New().String()
 	_, err := r.db.Exec(ctx,
-		`INSERT INTO users (username, name, email, password) 
-         VALUES ($1, $2, $3, $4)`,
-		u.Username, u.Name, u.Email, u.Password,
+		`INSERT INTO users (id, username, name, email, password) 
+         VALUES ($1, $2, $3, $4, $5)`,
+		u.ID, u.Username, u.Name, u.Email, u.Password,
 	)
 	return err
 }
 
-func (r *PGRawUserRepository) GetUserByID(ctx context.Context, id int) (*user.User, error) {
+func (r *PGRawUserRepository) GetUserByID(ctx context.Context, id string) (*user.User, error) {
 	u := &user.User{}
 
 	err := r.db.QueryRow(ctx,

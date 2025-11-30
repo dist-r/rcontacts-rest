@@ -4,19 +4,19 @@ import {logger} from "hono/logger"
 import {cors} from "hono/cors"
 
 // PG ENVIRONTMENT
-// import db from "../config/postgres.raw";
+import poolPg from "../config/postgres.raw";
 // MONGO ENVIRONTMENT 
-import { connectMongo } from "../config/mongo.db";
-
-// PG IMPLEMENTS
-// import PostgresUserRepository from "../repository/raw/pg.user";
-// import PostgresContactRepository from "../repository/raw/pg.contact";
-
-// MONGO IMPLMENTS
-import MongoUserRepository from "../repository/nosql/mongo.user";
-import MongoContactRepository from "../repository/nosql/mongo.contact";
+// import { connectMongo } from "../config/mongo.db";
 
 // PG RAW IMPLEMENTS
+import PostgresUserRepository from "../repository/raw/pg.user";
+import PostgresContactRepository from "../repository/raw/pg.contact";
+
+// MONGO IMPLMENTS
+// import MongoUserRepository from "../repository/nosql/mongo.user";
+// import MongoContactRepository from "../repository/nosql/mongo.contact";
+
+// WRING DEPEND
 import UserController from "../modules/user/user.controller";
 import ContactController from "../modules/contact/contact.controller";
 
@@ -30,7 +30,8 @@ import userRoutes from "../routes/user.routes";
 import AppError from "../common/api.error";
 
 async function bootstrapp () {
-  const db = await connectMongo()
+  // const db = await connectMongo()
+  const db = poolPg
 
   const app = new Hono()
 
@@ -51,12 +52,13 @@ async function bootstrapp () {
   
   // WIRING DEPENDENCY
   // REPO POSTGRESS
-  // const userRepository = new PostgresUserRepository(poolPg)
-  // const contactRepository = new PostgresContactRepository(poolPg)
+  const userRepository = new PostgresUserRepository(db)
+  const contactRepository = new PostgresContactRepository(db)
 
   // REPO MONGO
-  const userRepository = new MongoUserRepository(db)
-  const contactRepository = new MongoContactRepository(db)
+  // const userRepository = new MongoUserRepository(db)
+  // const contactRepository = new MongoContactRepository(db)
+
   // SERVICE
   const userService = new UserService(userRepository)
   const contactService = new ContactService(contactRepository)
