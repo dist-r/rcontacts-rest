@@ -2,7 +2,7 @@ package contact
 
 import (
 	"context"
-	"strconv"
+	"fmt"
 
 	"time"
 
@@ -20,7 +20,8 @@ func NewContactHandler(service ContactService) *ContactHandler {
 func (ch *ContactHandler) CreateContact(c *fiber.Ctx) error {
 	context.Background()
 	contact := &Contact{}
-	userId := c.Locals("userID").(int)
+	userId := c.Locals("userID").(string)
+	fmt.Println(userId)
 	contact.UserID = userId
 	if err := c.BodyParser(contact); err != nil {
 		return err
@@ -34,7 +35,7 @@ func (ch *ContactHandler) CreateContact(c *fiber.Ctx) error {
 }
 
 func (ch *ContactHandler) GetAllContacts(c *fiber.Ctx) error {
-	userID, ok := c.Locals("userID").(int)
+	userID, ok := c.Locals("userID").(string)
 	if !ok {
 		return fiber.ErrUnauthorized
 	}
@@ -48,11 +49,8 @@ func (ch *ContactHandler) GetAllContacts(c *fiber.Ctx) error {
 
 func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
 	context.Background()
-	contactId, erro := strconv.Atoi(c.Params("id"))
+	contactId := c.Params("id")
 
-	if erro != nil {
-		return erro
-	}
 	contact := &Contact{}
 	contact.ID = contactId
 	if err := c.BodyParser(contact); err != nil {
@@ -68,10 +66,7 @@ func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
 }
 
 func (ch *ContactHandler) DeleteContact(c *fiber.Ctx) error {
-	contactId, erro := strconv.Atoi(c.Params("id"))
-	if erro != nil {
-		return erro
-	}
+	contactId := c.Params("id")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 

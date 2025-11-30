@@ -1,6 +1,6 @@
 type Contact = {
-  id: number
-  userId: number
+  id: number | string
+  userId: string
   name: string
   email: string
   phone: string
@@ -10,7 +10,7 @@ export interface CreateContact {
   name: string
   email: string
   phone: string
-  userId: number
+  userId: string
 }
 
 

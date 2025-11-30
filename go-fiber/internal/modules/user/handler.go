@@ -54,14 +54,14 @@ func (uh *UserHandler) LoginUser(c *fiber.Ctx) error {
 
 func (uh *UserHandler) GetUserProfile(c *fiber.Ctx) error {
 	ctx := context.Background()
-	userID := c.Locals("userID").(int)
+	userID := c.Locals("userID").(string)
 
 	user, err := uh.us.GetUserProfile(ctx, userID)
 	if err != nil {
 		return err
 	}
 	userWithoutPassword := struct {
-		ID       int    `json:"id"`
+		ID       string `json:"id"`
 		Username string `json:"username"`
 		Name     string `json:"name"`
 		Email    string `json:"email"`

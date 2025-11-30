@@ -44,17 +44,17 @@ func TestCreateContact_Error(t *testing.T) {
 
 func TestFindAllContact_Success(t *testing.T) {
 	mockRepo := &MockContactRepository{
-		GetAllContactsByUserIDFunc: func(ctx context.Context, userID int) ([]*Contact, error) {
+		GetAllContactsByUserIDFunc: func(ctx context.Context, userID string) ([]*Contact, error) {
 			return []*Contact{
-				{ID: 1, Name: "Bayu", Email: "bayu@mail.com"},
-				{ID: 2, Name: "Jeni", Email: "jeni@mail.com"},
+				{ID: "1", Name: "Bayu", Email: "bayu@mail.com"},
+				{ID: "1", Name: "Jeni", Email: "jeni@mail.com"},
 			}, nil
 		},
 	}
 
 	service := NewContactService(mockRepo)
 
-	contacts, err := service.FindAllContact(context.Background(), 1)
+	contacts, err := service.FindAllContact(context.Background(), "1")
 
 	if err != nil {
 		t.Fatalf("expected nil error, got %v", err)
@@ -67,14 +67,14 @@ func TestFindAllContact_Success(t *testing.T) {
 
 func TestFindAllContact_Error(t *testing.T) {
 	mockRepo := &MockContactRepository{
-		GetAllContactsByUserIDFunc: func(ctx context.Context, userID int) ([]*Contact, error) {
+		GetAllContactsByUserIDFunc: func(ctx context.Context, userID string) ([]*Contact, error) {
 			return nil, errors.New("DB error")
 		},
 	}
 
 	service := NewContactService(mockRepo)
 
-	_, err := service.FindAllContact(context.Background(), 1)
+	_, err := service.FindAllContact(context.Background(), "1")
 
 	if err == nil {
 		t.Fatalf("expected error, got nil")
@@ -115,14 +115,14 @@ func TestUpdateContact_Error(t *testing.T) {
 
 func TestDeleteContact_Success(t *testing.T) {
 	mockRepo := &MockContactRepository{
-		DeleteContactFunc: func(ctx context.Context, id int) error {
+		DeleteContactFunc: func(ctx context.Context, id string) error {
 			return nil
 		},
 	}
 
 	service := NewContactService(mockRepo)
 
-	err := service.DeleteContact(context.Background(), 1)
+	err := service.DeleteContact(context.Background(), "1")
 
 	if err != nil {
 		t.Fatalf("expected nil error, got %v", err)
@@ -131,14 +131,14 @@ func TestDeleteContact_Success(t *testing.T) {
 
 func TestDeleteContact_Error(t *testing.T) {
 	mockRepo := &MockContactRepository{
-		DeleteContactFunc: func(ctx context.Context, id int) error {
+		DeleteContactFunc: func(ctx context.Context, id string) error {
 			return errors.New("DB error")
 		},
 	}
 
 	service := NewContactService(mockRepo)
 
-	err := service.DeleteContact(context.Background(), 1)
+	err := service.DeleteContact(context.Background(), "1")
 
 	if err == nil {
 		t.Fatalf("expected error, got nil")

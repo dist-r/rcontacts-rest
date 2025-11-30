@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dist-r/rcontacts-rest/go-fiber/internal/modules/contact"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -18,15 +19,16 @@ func NewPGRawContactRepository(db *pgxpool.Pool) contact.ContactRepository {
 }
 
 func (r *PGRawContactRepository) CreateContact(ctx context.Context, c *contact.Contact) error {
+	c.ID = uuid.New().String()
 	_, err := r.db.Exec(ctx,
-		`INSERT INTO contacts (user_id, name, email, phone)
-         VALUES ($1, $2, $3, $4)`,
-		c.UserID, c.Name, c.Email, c.Phone,
+		`INSERT INTO contacts (id, user_id, name, email, phone)
+         VALUES ($1, $2, $3, $4, $5)`,
+		c.ID, c.UserID, c.Name, c.Email, c.Phone,
 	)
 	return err
 }
 
-func (r *PGRawContactRepository) GetContactByID(ctx context.Context, id int) (*contact.Contact, error) {
+func (r *PGRawContactRepository) GetContactByID(ctx context.Context, id string) (*contact.Contact, error) {
 	c := &contact.Contact{}
 
 	err := r.db.QueryRow(ctx,
@@ -42,7 +44,7 @@ func (r *PGRawContactRepository) GetContactByID(ctx context.Context, id int) (*c
 	return c, err
 }
 
-func (r *PGRawContactRepository) GetAllContactsByUserID(ctx context.Context, userID int) ([]*contact.Contact, error) {
+func (r *PGRawContactRepository) GetAllContactsByUserID(ctx context.Context, userID string) ([]*contact.Contact, error) {
 	rows, err := r.db.Query(ctx,
 		`SELECT id, user_id, name, email, phone
          FROM contacts WHERE user_id=$1`,
@@ -86,7 +88,7 @@ func (r *PGRawContactRepository) UpdateContact(ctx context.Context, c *contact.C
 	return nil
 }
 
-func (r *PGRawContactRepository) DeleteContact(ctx context.Context, id int) error {
+func (r *PGRawContactRepository) DeleteContact(ctx context.Context, id string) error {
 	tag, err := r.db.Exec(ctx,
 		`DELETE FROM contacts WHERE id=$1`,
 		id,
