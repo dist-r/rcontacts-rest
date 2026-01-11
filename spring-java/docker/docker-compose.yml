@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: pgdb
+    # env_file:
+    #   - ../.env
+    environment:
+      - POSTGRES_USER=pgdb
+      - POSTGRES_PASSWORD=pgdb
+      - POSTGRES_DB=pgdb
+    ports:
+      - 5432:5432
+    volumes:
+      - ../../migration:/docker-entrypoint-initdb.d
+
+  # mongodb:
+  #   image: mongo:latest
+  #   container_name: mongodb
+  #   env_file:
+  #     - ../.env
+  #   ports:
+  #     - 27017:27017
+    # volumes:
+    #   - ./mongo-init:/docker-entrypoint-initdb.d 
+
+  # app:
+  #   build:
+  #     context: ..
+  #     dockerfile: ./docker/Dockerfile
+  #   container_name: bun-hono-app
+  #   env_file:
+  #     - ../.env
+  #   environment:
+  #     - DOCKER_ENV=true
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - postgres
