@@ -1,4 +1,5 @@
 package org.distr.rcontacts.repository.sql;
+
 import org.distr.rcontacts.entities.ContactEntity;
 import java.util.Optional;
 import java.util.List;
