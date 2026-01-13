@@ -17,23 +17,6 @@ public class UserService {
         return "Hello from UserService!";
     }
 
-    public void createUser(String username, String name, String password, String email){
-        userRepository.findByEmail(email).ifPresentOrElse(
-            (user) -> {
-                throw new RuntimeException("User with email " + email + " already exists.");
-            },
-            () -> {
-                UserEntity user = new UserEntity(
-                    null,
-                    username,
-                    name,
-                    password,
-                    email
-                );
-                userRepository.create(user);
-            }
-        );
-    }
 
     public UserEntity getUserById(String userId){
         return userRepository.findById(userId).orElseThrow(

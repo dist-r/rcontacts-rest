@@ -33,7 +33,7 @@ public class ContactService {
         contactRepository.create(contact);
     }
 
-    @Transactional
+    @Transactional( readOnly = true )
     public List<ContactEntity> getAllContactsByUserId(String userId){
         return contactRepository.findAllByUserId(userId);
     }
