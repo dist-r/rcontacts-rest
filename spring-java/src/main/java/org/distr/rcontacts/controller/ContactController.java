@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/contacts")
 public class ContactController {
 
     @GetMapping("/contacts")

@@ -5,14 +5,6 @@ import org.distr.rcontacts.exception.AppException;
 import org.distr.rcontacts.repository.sql.UserRepository;
 import org.distr.rcontacts.utils.JwtUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.http.ResponseEntity;
-
-import jakarta.validation.Valid;
-
-import java.util.Map;
-import java.util.HashMap;
-
-import org.distr.rcontacts.dto.LoginUserReq;
 
 @Service
 public class AuthService {
@@ -59,5 +51,5 @@ public class AuthService {
         token = JwtUtil.generateToken(userId, email);
         return token;
     }
-    
+
 }
