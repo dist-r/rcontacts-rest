@@ -108,13 +108,12 @@ public class ContactRepositoryPostgres implements ContactRepository {
 
         // Implementation for updating a contact
         try(var connection = dataSource.getConnection()) {
-            var sql = "UPDATE contacts SET user_id = ?, name = ?, phone = ?, email = ? WHERE id = ?";
+            var sql = "UPDATE contacts SET name = ?, phone = ?, email = ? WHERE id = ?";
             try (var statement = connection.prepareStatement(sql)) {
-                statement.setString(1, contact.getUserId());
-                statement.setString(2, contact.getName());
-                statement.setString(3, contact.getPhone());
-                statement.setString(4, contact.getEmail());
-                statement.setString(5, contact.getId());
+                statement.setString(1, contact.getName());
+                statement.setString(2, contact.getPhone());
+                statement.setString(3, contact.getEmail());
+                statement.setString(4, contact.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
