@@ -36,73 +36,18 @@ The frontend/client for this API is published at the link above. You can use it 
 
 ![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun)
 ![Hono](https://img.shields.io/badge/Hono-%23E36002.svg?style=for-the-badge&logo=hono)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
 **Implemented by Uzumaki Bayu (admin)**
 
-### Project Structure
-
-The `bun-hono/` folder contains the TypeScript implementation using Bun runtime and Hono framework.
-
-```
-bun-hono/
-├── package.json          # Dependencies and scripts
-├── tsconfig.json         # TypeScript configuration
-├── docker/
-│   ├── docker-compose.yml # Docker Compose for Postgres + app
-│   └── Dockerfile         # Docker build instructions
-├── src/
-│   ├── index.ts          # Main entry point
-│   ├── bootstrapp/
-│   │   └── bootstrapp.ts # Application bootstrap
-│   ├── common/
-│   │   └── api.error.ts  # Common API error handling
-│   ├── config/
-│   │   ├── logger.pino.ts # Pino logger configuration
-│   │   ├── mongo.db.ts    # MongoDB connection
-│   │   └── postgres.raw.ts # Raw PostgreSQL connection
-│   ├── middleware/
-│   │   └── auth.middleware.ts # Authentication middleware
-│   ├── modules/
-│   │   ├── contact/
-│   │   │   ├── contact.controller.ts
-│   │   │   ├── contact.repository.ts
-│   │   │   ├── contact.service.ts
-│   │   │   ├── contact.ts
-│   │   │   └── __test__/
-│   │   └── user/
-│   │       ├── user.controller.ts
-│   │       ├── user.repository.ts
-│   │       ├── user.service.ts
-│   │       ├── user.ts
-│   │       └── __test__/
-│   ├── repository/
-│   │   ├── inmemo/
-│   │   │   ├── inMemo.contact.ts
-│   │   │   └── inMemo.user.ts
-│   │   ├── nosql/
-│   │   │   ├── mongo.contact.ts
-│   │   │   └── mongo.user.ts
-│   │   ├── orm/
-│   │   │   ├── drizzle.repository.ts
-│   │   │   └── prisma.repository.ts
-│   │   └── raw/
-│   │       ├── pg.contact.ts
-│   │       └── pg.user.ts
-│   ├── routes/
-│   │   ├── auth.routes.ts
-│   │   ├── contact.routes.ts
-│   │   └── user.routes.ts
-│   └── utils/
-│       ├── hash.utils.ts
-│       └── jwt.utils.ts
-```
+A high-performance REST API implementation using Bun runtime and Hono framework. This project showcases a lightweight, fast alternative to traditional Node.js server implementations with support for multiple database backends and ORM options.
 
 ### How to Run
 
 #### Prerequisites
 - Bun
-- PostgreSQL database
-- MongoDB database
+- Database postgresql (implemented) / mysql(planned) / msserver (planned)  - (sql)
+- Database mongodb - (nosql)
 - docker (optional)
 
 #### Run Locally
@@ -149,55 +94,7 @@ docker compose -f bun-hono/docker/docker-compose.yml up -d --build
 
 **Implemented by Uzumaki Bayu (admin)**
 
-### Project Structure
-
-The `go-fiber/` folder contains the Go implementation using Fiber framework.
-
-```
-go-fiber/
-├── go.mod               # Go module file
-├── cmd/
-│   └── main.go          # Main entry point
-├── docker/
-│   ├── docker-compose.yml
-│   └── Dockerfile
-├── internal/
-│   ├── bootstrapp/
-│   │   └── app.go       # Application bootstrap
-│   ├── modules/
-│   │   ├── auth/
-│   │   │   └── auth.go
-│   │   ├── contact/
-│   │   │   ├── contact.go
-│   │   │   ├── handler.go
-│   │   │   ├── mock_repo_test.go
-│   │   │   ├── repository.go
-│   │   │   ├── routes.go
-│   │   │   ├── service_test.go
-│   │   │   └── service.go
-│   │   └── user/
-│   │       ├── handler.go
-│   │       ├── mock_repo_test.go
-│   │       ├── repository.go
-│   │       ├── routes.go
-│   │       ├── service_test.go
-│   │       └── service.go
-│   │       └── user.go
-│   └── repository/
-│       └── raw/
-│           ├── pg_raw_contact.go
-│           └── ...
-├── pkg/
-│   ├── app/
-│   │   └── app_error.go
-│   ├── config/
-│   │   └── db_pgx.go
-│   ├── middleware/
-│   │   └── auth_middleware.go
-│   └── utils/
-│       ├── hashed.go
-│       └── jwt.go
-```
+A production-ready REST API built with Go and Fiber framework, designed for optimal performance and concurrency. This implementation demonstrates Go's strengths in building scalable backend services with excellent memory efficiency and fast execution.
 
 ### How to Run
 
@@ -246,29 +143,12 @@ docker compose -f go-fiber/docker/docker-compose.yml up -d --build
 
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
 ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
 
 **Implemented by Uzumaki Bayu (admin)**
 
-### Project Structure
-
-The `spring-java/` folder contains the Java implementation using Spring Boot.
-
-```
-spring-java/
-├── mvnw
-├── mvnw.cmd
-├── pom.xml
-├── docker/
-│   ├── docker-compose.yml
-│   └── Dockerfile
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   └── resources/
-│   └── test/
-│       └── java/
-
-```
+An enterprise-grade REST API implementation using Spring Boot framework with Java. This project demonstrates best practices for building scalable, maintainable backend services with modern Spring ecosystem components.
 
 ### How to Run
 

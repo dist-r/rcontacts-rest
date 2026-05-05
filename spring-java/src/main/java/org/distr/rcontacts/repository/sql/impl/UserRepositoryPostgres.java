@@ -1,4 +1,4 @@
-package org.distr.rcontacts.repository.sql.imp;
+package org.distr.rcontacts.repository.sql.impl;
 
 import org.distr.rcontacts.entities.UserEntity;
 import org.distr.rcontacts.repository.sql.UserRepository;

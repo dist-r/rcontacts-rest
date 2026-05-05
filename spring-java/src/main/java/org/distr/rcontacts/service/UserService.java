@@ -27,9 +27,6 @@ public class UserService {
 
     @GetMapping("/profile")
     public Map<String, Object>getUserById(String userId){
-        // return userRepository.findById(userId).orElseThrow(
-        //     () -> new AppException("User with id " + userId + " not found.", 404)
-        // );
         UserEntity user = userRepository.findById(userId).orElseThrow(
             () -> new AppException("User with id " + userId + " not found.", 404)
         );
