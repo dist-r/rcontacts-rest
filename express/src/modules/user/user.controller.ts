@@ -54,10 +54,12 @@ class UserController {
 
   async profileUser(req: Request, res: Response): Promise<void> {
     const id = (req as any).userId as string;
+    console.log("User ID from token:", id);
 
     const data = await this.userService.userProfile(id);
 
     if(!data) {
+      console.log("User not found");
       res.status(404).json({ message: "User not found" });
       return;
     }

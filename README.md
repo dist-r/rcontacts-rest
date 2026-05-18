@@ -4,6 +4,8 @@
 ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
 ![Made with Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun)
 ![Made with Hono](https://img.shields.io/badge/Hono-%23E36002.svg?style=for-the-badge&logo=hono)
+![Made with Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Made with Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Made with Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Made with Fiber](https://img.shields.io/badge/Fiber-00ADD8?style=for-the-badge&logo=fiber&logoColor=white)
 ![Made with TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
@@ -23,6 +25,7 @@
 Repository containing REST API implementations for a contact-management app (`rcontacts-rest`). There are multiple server implementations in this repo:
 
 - `bun-hono` – TypeScript implementation using Bun + Hono.
+- `express` - TypeScript implementation using Node.js + Express.
 - `go-fiber` – Go implementation using Fiber.
 - `spring-java` – Java implementation using Spring Boot (on progress).
 - `ASP .NET` - C# implementation using ASP.NET Core (coming soon).
@@ -86,6 +89,67 @@ docker compose -f bun-hono/docker/docker-compose.yml up -d --build
   - Raw SQL (implemented)
   - ![Drizzle](https://img.shields.io/badge/Drizzle-7C3AED?style=for-the-badge&logo=drizzle&logoColor=white) Drizzle (planned)
   - ![Prisma](https://img.shields.io/badge/Prisma-0EA5A8?style=for-the-badge&logo=prisma&logoColor=white) Prisma (planned)
+
+## Express TypeScript Implementation
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+
+**Implemented by Uzumaki Bayu (admin)**
+
+A REST API implementation using Node.js, Express, and TypeScript. This implementation follows a modular structure with controllers, services, repositories, middleware, JWT authentication, and raw PostgreSQL data access.
+
+### How to Run
+
+#### Prerequisites
+- Node.js
+- npm
+- PostgreSQL database
+- docker (optional)
+
+#### Run Locally
+1. Navigate to the folder:
+   ```bash
+   cd express
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run development server:
+   ```bash
+   npm run dev
+   ```
+
+The service listens on `http://localhost:3000` by default.
+
+#### Build and Run
+```bash
+npm run build
+npm run preview
+```
+
+#### Run with Docker Compose
+```bash
+docker compose -f express/docker/docker-compose.yml up -d --build
+```
+
+### Technologies Supported
+
+- **SQL Databases:**
+  - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) PostgreSQL (implemented with raw SQL)
+  - ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) MySQL (planned)
+
+- **NoSQL Databases:**
+  - MongoDB (planned)
+
+- **ORM/Data Layers:**
+  - Raw SQL (implemented)
+  - Prisma (planned)
 
 ## Go Fiber Implementation
 
@@ -189,7 +253,6 @@ docker compose -f spring-java/docker/docker-compose.yml up -d --build
 
 - `ASP .NET` - C# implementation using ASP.NET Core (coming soon).
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
-- `nodejs-express` – Node.js implementation using Express (coming soon).
 - `nest-nodejs` – Node.js implementation using NestJS (coming soon).
 
 ## Database

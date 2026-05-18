@@ -50,7 +50,18 @@ class UserService {
   }
 
   async userProfile(id: string): Promise<Omit<User, "password"> | null> {
-    return null;
+    const user = await this.userRepository.getUserById(id);
+    this.logger.info(`User profile accessed for userId: ${id}`);
+    if(!user) {
+      return null;
+    }
+    const userProfile: Omit<User, "password"> = {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+    }
+    return userProfile;
   }
 }
 
