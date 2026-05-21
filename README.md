@@ -19,6 +19,7 @@
 ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
 ![Raw SQL](https://img.shields.io/badge/Raw--SQL-gray?style=for-the-badge&logo=postgresql&logoColor=white)
 
@@ -28,12 +29,15 @@ Repository containing REST API implementations for a contact-management app (`rc
 - `express` - TypeScript implementation using Node.js + Express.
 - `go-fiber` – Go implementation using Fiber.
 - `spring-java` – Java implementation using Spring Boot (on progress).
-- `ASP .NET` - C# implementation using ASP.NET Core (coming soon).
+- `aspdotnet` - C# implementation using ASP.NET Core.
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
 
 **Client implementation:** https://github.com/dist-r/rcontacts-client
 
 The frontend/client for this API is published at the link above. You can use it to interact with this API or as a reference.
+
+> [!IMPORTANT]
+> The `express` and `aspdotnet` implementations already use the new API response format. Because of that response change, they are not fully compatible with the current client application yet. The project is currently migrating the client and API usage to the new response format.
 
 ## Bun Hono Implementation
 
@@ -100,6 +104,9 @@ docker compose -f bun-hono/docker/docker-compose.yml up -d --build
 **Implemented by Uzumaki Bayu (admin)**
 
 A REST API implementation using Node.js, Express, and TypeScript. This implementation follows a modular structure with controllers, services, repositories, middleware, JWT authentication, and raw PostgreSQL data access.
+
+> [!IMPORTANT]
+> This implementation uses the new API response format, so it is not fully supported by the current client application yet. Client integration is being migrated to the new response format.
 
 ### How to Run
 
@@ -249,9 +256,66 @@ docker compose -f spring-java/docker/docker-compose.yml up -d --build
   - Raw SQL (implemented)
   - ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white) Hibernate (planned)
 
+## ASP.NET Core Implementation
+
+![.NET](https://img.shields.io/badge/.NET_8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+
+**Implemented by Uzumaki Bayu (admin)**
+
+A REST API implementation using C#, .NET 8, and ASP.NET Core. This implementation uses controllers, services, repositories, JWT authentication, Swagger/OpenAPI documentation, and raw PostgreSQL access through Npgsql.
+
+> [!IMPORTANT]
+> This implementation uses the new API response format, so it is not fully supported by the current client application yet. Client integration is being migrated to the new response format.
+
+### How to Run
+
+#### Prerequisites
+- .NET SDK 8+
+- PostgreSQL database
+
+#### Run Locally
+1. Navigate to the folder:
+   ```bash
+   cd aspdotnet
+   ```
+
+2. Restore dependencies:
+   ```bash
+   dotnet restore
+   ```
+
+3. Run development server:
+   ```bash
+   dotnet run
+   ```
+
+The service listens on `http://localhost:5226` by default for the `http` launch profile. Swagger is available at `/swagger` in development.
+
+### Technologies Supported
+
+- **Framework and Language:**
+  - ![.NET](https://img.shields.io/badge/.NET_8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white) .NET 8
+  - ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white) ASP.NET Core
+  - ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white) C#
+
+- **SQL Databases:**
+  - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) PostgreSQL (implemented with raw SQL through Npgsql)
+
+- **Authentication and API Docs:**
+  - ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white) JWT Bearer Authentication
+  - ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black) Swagger / OpenAPI
+
+- **ORM/Data Layers:**
+  - Raw SQL (implemented)
+  - Entity Framework Core (planned)
+
 ## Upcoming Implementations
 
-- `ASP .NET` - C# implementation using ASP.NET Core (coming soon).
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
 - `nest-nodejs` – Node.js implementation using NestJS (coming soon).
 
@@ -261,7 +325,7 @@ This project uses **PostgreSQL**. SQL scripts for creating tables are in `migrat
 
 ## Environment (.env)
 
-Both implementations expect environment variables for database connection and secrets (e.g. `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_HOST`, `POSTGRES_PORT`, `JWT_SECRET`). The Docker Compose files reference an `.env` file (typically `../.env` relative to the `docker` folder), so place your `.env` accordingly or set env vars in your environment.
+The implementations expect environment variables for database connection and secrets (e.g. `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_HOST`, `POSTGRES_PORT`, `JWT_SECRET`). The Docker Compose files reference an `.env` file (typically `../.env` relative to the `docker` folder), so place your `.env` accordingly or set env vars in your environment.
 
 If a `.env.example` exists, copy it and update values:
 
