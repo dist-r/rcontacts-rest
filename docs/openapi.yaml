@@ -1,13 +1,20 @@
-
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: Rcontacts REST API
-  version: 1.0.0
-  description: API documentation for the Rcontacts REST API, providing contact management functionalities.
+  version: 2.0.0
+  description: API documentation for Rcontacts REST API v2.
 
 servers:
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:3000/api/v2
     description: Local Development Server
+
+tags:
+  - name: Auth
+    description: Authentication endpoints
+  - name: Users
+    description: User profile endpoints
+  - name: Contacts
+    description: Contact management endpoints
 
 components:
   securitySchemes:
@@ -15,13 +22,45 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
   schemas:
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Request processed successfully"
+        success:
+          type: boolean
+          example: true
+        data:
+          nullable: true
+      required:
+        - message
+        - success
+        - data
+
+    ErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            message:
+              type: string
+              example: "Invalid request body"
+            success:
+              type: boolean
+              example: false
+            data:
+              nullable: true
+              example: null
+
     User:
       type: object
       properties:
         id:
-          type: number
-          example: 1
+          type: string
+          example: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
         username:
           type: string
           example: "john.doe"
@@ -35,31 +74,35 @@ components:
       required:
         - id
         - username
+        - name
         - email
+
     Contact:
       type: object
       properties:
         id:
-          type: number
-          example: 1
+          type: string
+          example: "a8c6d879-2ef9-4b8a-9d58-6a87957ed8fd"
         userId:
-          type: number
-          example: 1
+          type: string
+          example: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
         name:
           type: string
           example: "Jane Doe"
-        phone:
-          type: string
-          example: "+1234567890"
         email:
           type: string
           format: email
           example: "jane.doe@example.com"
+        phone:
+          type: string
+          example: "+6281234567890"
       required:
         - id
         - userId
         - name
+        - email
         - phone
+
     RegisterRequest:
       type: object
       properties:
@@ -82,6 +125,7 @@ components:
         - name
         - email
         - password
+
     LoginRequest:
       type: object
       properties:
@@ -96,7 +140,8 @@ components:
       required:
         - email
         - password
-    AuthResponse:
+
+    AuthToken:
       type: object
       properties:
         token:
@@ -104,126 +149,221 @@ components:
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
       required:
         - token
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Error message"
+
     CreateContactRequest:
       type: object
       properties:
         name:
           type: string
           example: "Alice Smith"
-        phone:
-          type: string
-          example: "+1987654321"
         email:
           type: string
           format: email
           example: "alice.smith@example.com"
+        phone:
+          type: string
+          example: "+6289876543210"
       required:
         - name
+        - email
         - phone
+
     UpdateContactRequest:
       type: object
       properties:
         name:
           type: string
           example: "Alice Smith Updated"
-        phone:
-          type: string
-          example: "+1987654321"
         email:
           type: string
           format: email
-          example: "alice.smith.updated@example.com"
-    
+          example: "alice.updated@example.com"
+        phone:
+          type: string
+          example: "+6289876543210"
+      minProperties: 1
+
+    UserResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/User"
+
+    LoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/AuthToken"
+
+    ContactResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/Contact"
+
+    ContactListResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Contact"
+
+    DeleteContactResponse:
+      allOf:
+        - $ref: "#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            message:
+              type: string
+              example: "Contact deleted successfully"
+            success:
+              type: boolean
+              example: true
+            data:
+              nullable: true
+              example: null
+
 paths:
   /auth/register:
     post:
+      tags:
+        - Auth
       summary: Register a new user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterRequest'
+              $ref: "#/components/schemas/RegisterRequest"
       responses:
-        '201':
+        "201":
           description: User registered successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid input
+                $ref: "#/components/schemas/UserResponse"
+              example:
+                message: "User registered successfully"
+                success: true
+                data:
+                  id: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
+                  username: "newuser"
+                  name: "New User"
+                  email: "newuser@example.com"
+        "400":
+          description: Invalid request body
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"
+
   /auth/login:
     post:
+      tags:
+        - Auth
       summary: Log in a user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: "#/components/schemas/LoginRequest"
       responses:
-        '200':
+        "200":
           description: User logged in successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '401':
+                $ref: "#/components/schemas/LoginResponse"
+              example:
+                message: "User logged in successfully"
+                success: true
+                data:
+                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Invalid credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"
+
   /users/profile:
     get:
-      summary: Get user profile
+      tags:
+        - Users
+      summary: Get authenticated user profile
       security:
         - bearerAuth: []
       responses:
-        '200':
-          description: User profile
+        "200":
+          description: User profile retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '401':
+                $ref: "#/components/schemas/UserResponse"
+              example:
+                message: "User profile retrieved successfully"
+                success: true
+                data:
+                  id: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
+                  username: "john.doe"
+                  name: "John Doe"
+                  email: "john.doe@example.com"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"
+
   /contacts:
     get:
+      tags:
+        - Contacts
       summary: Get all contacts for the authenticated user
       security:
         - bearerAuth: []
       responses:
-        '200':
-          description: A list of contacts
+        "200":
+          description: Contacts retrieved successfully
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Contact'
-        '401':
+                $ref: "#/components/schemas/ContactListResponse"
+              example:
+                message: "Contacts retrieved successfully"
+                success: true
+                data:
+                  - id: "a8c6d879-2ef9-4b8a-9d58-6a87957ed8fd"
+                    userId: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
+                    name: "Jane Doe"
+                    email: "jane.doe@example.com"
+                    phone: "+6281234567890"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"
+
     post:
+      tags:
+        - Contacts
       summary: Create a new contact
       security:
         - bearerAuth: []
@@ -232,92 +372,126 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateContactRequest'
+              $ref: "#/components/schemas/CreateContactRequest"
       responses:
-        '201':
+        "201":
           description: Contact created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Contact'
-        '400':
-          description: Invalid input
+                $ref: "#/components/schemas/ContactResponse"
+              example:
+                message: "Contact created successfully"
+                success: true
+                data:
+                  id: "a8c6d879-2ef9-4b8a-9d58-6a87957ed8fd"
+                  userId: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
+                  name: "Alice Smith"
+                  email: "alice.smith@example.com"
+                  phone: "+6289876543210"
+        "400":
+          description: Invalid request body
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '401':
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"
+
   /contacts/{id}:
     put:
+      tags:
+        - Contacts
       summary: Update a contact by ID
       security:
         - bearerAuth: []
       parameters:
         - in: path
           name: id
-          schema:
-            type: number
           required: true
           description: ID of the contact to update
+          schema:
+            type: string
+            example: "a8c6d879-2ef9-4b8a-9d58-6a87957ed8fd"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateContactRequest'
+              $ref: "#/components/schemas/UpdateContactRequest"
       responses:
-        '200':
+        "200":
           description: Contact updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Contact'
-        '400':
-          description: Invalid input
+                $ref: "#/components/schemas/ContactResponse"
+              example:
+                message: "Contact updated successfully"
+                success: true
+                data:
+                  id: "a8c6d879-2ef9-4b8a-9d58-6a87957ed8fd"
+                  userId: "5bb3f34b-4d8c-4c9d-9ac7-2df18d4db7ff"
+                  name: "Alice Smith Updated"
+                  email: "alice.updated@example.com"
+                  phone: "+6289876543210"
+        "400":
+          description: Invalid request body
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '401':
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Contact not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"
+
     delete:
+      tags:
+        - Contacts
       summary: Delete a contact by ID
       security:
         - bearerAuth: []
       parameters:
         - in: path
           name: id
-          schema:
-            type: number
           required: true
           description: ID of the contact to delete
+          schema:
+            type: string
+            example: "a8c6d879-2ef9-4b8a-9d58-6a87957ed8fd"
       responses:
-        '204':
+        "200":
           description: Contact deleted successfully
-        '401':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteContactResponse"
+              example:
+                message: "Contact deleted successfully"
+                success: true
+                data: null
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Contact not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/ErrorResponse"

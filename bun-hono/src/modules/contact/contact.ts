@@ -1,5 +1,5 @@
 type Contact = {
-  id: number | string
+  id: string
   userId: string
   name: string
   email: string

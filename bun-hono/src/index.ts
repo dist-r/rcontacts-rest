@@ -1,4 +1,6 @@
 import bootstrapp from './bootstrapp/bootstrapp'
+import Bun from 'bun'
+
 
 // const app = bootstrapp()
 // const port = process.env.PORT || 3000
