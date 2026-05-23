@@ -3,19 +3,15 @@ using AspDotNet.Features.User;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-public class PgRawUserRepository : IUserRepository
+public class PgRawUserRepository(IConfiguration configuration, ILogger<PgRawUserRepository> logger) : IUserRepository
 {
-    private readonly string _connectionString;
-
-    public PgRawUserRepository(IConfiguration configuration)
-    {
-        _connectionString =
+    private readonly string _connectionString =
             configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException(
                 "DefaultConnection is not configured");
-    }
+    private readonly ILogger<PgRawUserRepository> _logger = logger;
 
-    public async Task<User?> GetUserById(string id)
+  public async Task<User?> GetUserById(string id)
     {
         await using var connection =
             new NpgsqlConnection(_connectionString);
@@ -51,69 +47,82 @@ public class PgRawUserRepository : IUserRepository
 
     public async Task<User?> GetUserByEmail(string email)
     {
-        await using var connection =
+        try
+        {
+            await using var connection =
             new NpgsqlConnection(_connectionString);
 
-        await connection.OpenAsync();
+            await connection.OpenAsync();
 
-        const string sql = """
-            SELECT
-                id,
-                username,
-                name,
-                email,
-                password
-            FROM users
-            WHERE email = @email
-            """;
+            const string sql = """
+                SELECT
+                    id,
+                    username,
+                    name,
+                    email,
+                    password
+                FROM users
+                WHERE email = @email
+                """;
 
-        await using var command =
-            new NpgsqlCommand(sql, connection);
+            await using var command =
+                new NpgsqlCommand(sql, connection);
 
-        command.Parameters.AddWithValue("email", email);
+            command.Parameters.AddWithValue("email", email);
 
-        await using var reader =
-            await command.ExecuteReaderAsync();
+            await using var reader =
+                await command.ExecuteReaderAsync();
 
-        if (await reader.ReadAsync())
+            if (await reader.ReadAsync())
+            {
+                return MapUser(reader);
+            }
+            return null;
+        } 
+        catch (Exception ex)
         {
-            return MapUser(reader);
+            _logger.LogError(ex, "Error getting user by email");
+            throw new Exception(ex.Message);
         }
-
-        return null;
     }
 
     public async Task<User> Create(string id, string username, string name, string email, string password)
     {
-        await using var connection =
-            new NpgsqlConnection(_connectionString);
 
-        await connection.OpenAsync();
-
-        const string sql = """
-            INSERT INTO users (id, username, name, email, password)
-            VALUES (@id, @username, @name, @email, @password)
-            RETURNING id, username, name, email, password
-            """;
-
-        await using var command =
-            new NpgsqlCommand(sql, connection);
-
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("username", username);
-        command.Parameters.AddWithValue("name", name);
-        command.Parameters.AddWithValue("email", email);
-        command.Parameters.AddWithValue("password", password); 
-
-        await using var reader =
-            await command.ExecuteReaderAsync();
-
-        if (await reader.ReadAsync())
+        try
         {
-            return MapUser(reader);
-        } else
+            await using var connection = new NpgsqlConnection(_connectionString);
+
+            await connection.OpenAsync();
+
+            const string sql = """
+                INSERT INTO users (id, username, name, email, password)
+                VALUES (@id, @username, @name, @email, @password)
+                RETURNING id, username, name, email, password
+                """;
+
+            await using var command = new NpgsqlCommand(sql, connection);
+
+            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("username", username);
+            command.Parameters.AddWithValue("name", name);
+            command.Parameters.AddWithValue("email", email);
+            command.Parameters.AddWithValue("password", password); 
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return MapUser(reader);
+            } else
+            {
+                throw new Exception("User not created");
+            }
+           
+        } catch (Exception ex)
         {
-            throw new Exception("Failed to create user");
+            _logger.LogError(ex, "Error creating user");
+            throw new Exception(ex.Message);
         }
     }
     private static User MapUser(NpgsqlDataReader reader)

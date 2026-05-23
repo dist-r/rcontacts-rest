@@ -1,13 +1,8 @@
 namespace AspDotNet.Shared;
 
-public class AppException : Exception
+public class AppException(string message, int code) : Exception(message)
 {
-    public AppException(string message, int code) : base(message)
-    {
-      Code = code; 
-    }
-  
-    public int Code { get; }
+  public int Code { get; } = code;
 
 }
 
