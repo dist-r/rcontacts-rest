@@ -14,13 +14,15 @@ class GlobalErrorHandler
       this.logger.error(`AppError: ${err.message}`);
       const apiResponse: ApiResponse<null> = {
         message: err.message,
-        data: null
+        success: false,
+        data: null,
       };
       res.status(err.statusCode).json(apiResponse);
     } else if (err instanceof ZodError) {
       this.logger.error(`Validation Error: ${err.message}`);
       const apiResponse: ApiResponse<null> = {
         message: "Validation Error",
+        success: false,
         data: null
       };
       res.status(400).json(apiResponse);
@@ -28,6 +30,7 @@ class GlobalErrorHandler
       this.logger.error(`Internal Server Error: ${err.message}`);
       const apiResponse: ApiResponse<null> = {
         message: "Internal Server Error",
+        success: false,
         data: null
       };
       res.status(500).json(apiResponse);

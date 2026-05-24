@@ -9,7 +9,7 @@ class Bootstrapp {
 
   static init(app: Express) : void {
     
-    const urlApi = process.env.URL_API || "/api/v1";
+    const urlApi = `/api/${process.env.API_VERSION || "v1"}`;
 
     const logger = new PinoLogger();
     const pgDatabase = new PgDatabase();

@@ -6,7 +6,8 @@ interface AccessTokenPayload {
 }
 
 class JwtUtils {
-  private static secretKey = process.env.JWT_SECRET as string || "supersecretkey";
+  
+  private static secretKey = process.env.JWT_SECRET as string || "testkey";
 
   private static accessTokenExpires: SignOptions["expiresIn"] = "15m";
 

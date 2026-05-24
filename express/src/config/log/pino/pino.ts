@@ -4,36 +4,69 @@ import ILogger from "../ilogger";
 class PinoLogger implements ILogger {
 
   private logger: Logger;
-  
+
   constructor() {
-    this.logger = pino(
-      {
-        level: process.env.LOG_LEVEL || "debug",
-        transport: {
-          target: "pino-pretty",
-          options: {
-            colorize: true,
-            translateTime: "SYS:standard",
-          },
-        },
+
+    const args = process.argv.slice(2);
+
+    const isProduction =
+      args.includes("--production");
+
+    const level =
+      isProduction ? "info" : "debug";
+
+    const transportStdout = {
+      target: "pino-pretty",
+      options: {
+        colorize: true,
+        translateTime: "SYS:standard",
       },
-    );
+    };
+
+    const transport =
+      isProduction
+        ? undefined
+        : transportStdout;
+
+    this.logger = pino({
+      level,
+      transport,
+    });
   }
 
-  debug(payload: unknown) {
-    this.logger.debug(payload);
+  debug(
+    message: string,
+    meta?: Record<string, unknown>
+  ): void {
+    this.logger.debug(meta, message);
   }
 
-  info(payload: unknown) {
-    this.logger.info(payload);
+  info(
+    message: string,
+    meta?: Record<string, unknown>
+  ): void {
+    this.logger.info(meta, message);
   }
 
-  warn(payload: unknown) {
-    this.logger.warn(payload);
+  warn(
+    message: string,
+    meta?: Record<string, unknown>
+  ): void {
+    this.logger.warn(meta, message);
   }
 
-  error(payload: unknown) {
-    this.logger.error(payload 
+  error(
+    message: string,
+    err?: unknown,
+    meta?: Record<string, unknown>
+  ): void {
+
+    this.logger.error(
+      {
+        ...meta,
+        err,
+      },
+      message,
     );
   }
 }
