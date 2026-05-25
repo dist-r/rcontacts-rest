@@ -2,23 +2,28 @@ import { Context } from "hono";
 import { StatusCode } from "hono/utils/http-status";
 import { ApiResponse } from "../common/api.response";
 import AppError from "../common/api.error";
+import ILogger from "../config/logger/ilogger";
 
-export default function globalErrorHandler(err: Error, c: Context){
+export default function globalErrorHandler(err: Error, c: Context, logger: ILogger){
 
-
-  let message = err.message
-  let statusCode : StatusCode = 500
   if (err instanceof AppError) {
-    message = err.message
-    statusCode = err.statusCode
+      logger.debug("BusinissError Flow")
+      const response : ApiResponse<null> = {
+        message: err.message,
+        success: false,
+        data: null
+      }
+      c.status(err.statusCode)
+      return c.json(response)
+  } else {
+      logger.error("InternalServerError Flow")
+      const response : ApiResponse<null> = {
+        message: "Internal Server Error",
+        success: false,
+        data: null
+      }
+      c.status(500)
+      return c.json(response)
   }
-  
-  const response : ApiResponse<null> = {
-    message,
-    success: false,
-    data: null
-  }
-  c.status(statusCode)
-  return c.json(response)
   
 }

@@ -2,7 +2,8 @@
   "name": "bun-hono",
   "scripts": {
     "dev": "bun run --hot src/index.ts --dev",
-    "test": "bun test"
+    "test": "bun test",
+    "prod" : "bun run src/index.ts --production"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.7",

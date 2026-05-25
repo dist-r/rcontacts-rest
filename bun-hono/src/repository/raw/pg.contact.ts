@@ -1,7 +1,8 @@
 import { Pool } from "pg";
 import ContactRepository from "../../modules/contact/contact.respository";
 import Contact from "../../modules/contact/contact";
-import ILogger from "../../config/logger/Ilogger";
+import ILogger from "../../config/logger/ilogger";
+
 class PostgresContactRepository implements ContactRepository{
 
   constructor(private db: Pool, private logger: ILogger) {}

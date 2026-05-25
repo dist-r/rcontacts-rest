@@ -1,44 +1,52 @@
-import { pino } from "pino";
+import { Logger, pino } from "pino";
 import ILogger from "./ilogger";
 
-const isDev = process.argv.includes("--dev");
-
-// export const appLog = pino({
-//   level: isDev ? "debug" : "info",
-//   transport: {
-//     target: "pino-pretty",
-//     options: {
-//       colorize: true,
-//     },
-//   },
-// })
 
 export default class PinoLogger implements ILogger{
 
-  private logger = pino({
-    level: isDev ? "debug" : "info",
-    transport: {
-      target: "pino-pretty",
+  private logger: Logger; 
+
+  constructor(){
+    
+    const args = process.argv.slice(2);
+
+    const isProduction = args.includes('--production');
+
+    const level = isProduction ? 'info' : 'debug';
+
+    const transport = isProduction ? undefined : {
+      target: 'pino-pretty',
       options: {
         colorize: true,
-      },
-    },
-  });
+         translateTime: "SYS:standard",
+      }
+    }
 
-  debug(message: string, meta?: unknown): void {
+    this.logger = pino({
+      level,
+      transport
+    });
+  }
+
+  debug(message: string, meta?: Record<string, unknown>): void {
     this.logger.debug(meta, message);
   }
 
-  info(message: string, meta?: unknown): void {
+  info(message: string, meta?: Record<string, unknown>): void {
     this.logger.info(meta, message);
   }
 
-  warn(message: string, meta?: unknown): void {
+  warn(message: string, meta?: Record<string, unknown>): void {
     this.logger.warn(meta, message);
   }
 
-  error(message: string, meta?: unknown): void {
-    this.logger.error(meta, message);
+  error(message: string,  err?: unknown, errMeta?: Record<string, unknown>): void {
+    this.logger.error({
+      err,
+      ...errMeta
+    },
+    message
+  );
   }
 
 }

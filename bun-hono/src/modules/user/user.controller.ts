@@ -6,15 +6,13 @@ import { ApiResponse } from "../../common/api.response";
 
 export default class UserController {
 
-  constructor(private userService: UserService){}
+  constructor(private userService: UserService) {}
 
-  async register(c: Context) {
+  async register(c: Context){
 
     const {username, name, email, password} = await c.req.json()
     const parseReq = CreateUserSchema.parse({username, name, email, password})
-    
     const result =await this.userService.createUser(parseReq.username, parseReq.name, parseReq.email, parseReq.password)
-
     const response : ApiResponse<RegisterResponse> = {
       message: "User registered successfully",
       success: true,
@@ -27,13 +25,13 @@ export default class UserController {
     }
     c.status(201)
     return c.json(response)
+
   }
 
   async login(c: Context) {
    
     const {email, password} = await c.req.json()
     const parseReq = LoginUserSchema.parse({email, password})
-
     const response = await this.userService.loginUser(parseReq.email, parseReq.password)
     const apiResponse : ApiResponse<LoginResponse> = {
       message: "User logged in successfully",
@@ -43,6 +41,7 @@ export default class UserController {
       }
     }
     return c.json(apiResponse)
+
   }
 
   async profile(c: Context) {

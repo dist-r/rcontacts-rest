@@ -24,7 +24,7 @@ async function bootstrapp () {
 
   // GLOBAL ERROR HANDLER
 
-  app.onError((err : Error, c : Context) => globalErrorHandler(err, c))
+  app.onError((err : Error, c : Context) => globalErrorHandler(err, c, loggerApp))
 
   // GLOBAL Middlewar
   app.use(logger())
