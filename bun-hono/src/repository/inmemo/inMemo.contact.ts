@@ -1,38 +1,47 @@
-import ContactRepository from "../../modules/contact/contact.respository";
-import Contact from "../../modules/contact/contact";
+import IContactRepository from "../../modules/contact/contact.respository"
+import Contact from "../../modules/contact/contact"
 
-class InMemoryContactRepository implements ContactRepository {
+class InMemoryContactRepository implements IContactRepository {
   contacts: Contact[]
 
   constructor() {
     this.contacts = []
   }
 
-  async create(name: string, email: string, phone: string, userId: number): Promise<Contact> {
+  async create(name: string, email: string, phone: string, userId: string): Promise<Contact> {
+    const id = crypto.randomUUID()
     const contact = {
-      id: this.contacts.length + 1,
+      id,
       name,
       email,
       phone,
       userId
     }
     this.contacts.push(contact)
+    const result = this.contacts.find(contact => contact.id === id)
+    if (!result) {
+      throw new Error("Contact not found")
+    }
+    return result
+  }
+
+  async findByID(id: string): Promise<Contact | null> {
+    const contact = this.contacts.find(contact => contact.id === id)
+    if (!contact) {
+      return null
+    }
     return contact
   }
 
-  async findByID(id: number): Promise<Contact | undefined> {
-    return this.contacts.find(contact => contact.id === id)
-  }
-
-  async findAll(userId: number): Promise<Contact[] | undefined> {
+  async findAll(userId: string): Promise<Contact[]> {
     const userContacts = this.contacts.filter(contact => contact.userId === userId);
-    return userContacts.length > 0 ? userContacts : undefined;
+    return userContacts;
   }
 
-  async update(id: number, contact: Partial<Contact>): Promise<Contact | undefined> {
+  async update(id: string, contact: Partial<Contact>): Promise<Contact> {
     const index = this.contacts.findIndex(c => c.id === id)
     if (index === -1) {
-      return undefined
+      throw new Error("Contact not found")
     }
     this.contacts[index] = {
       ...this.contacts[index],
@@ -41,8 +50,13 @@ class InMemoryContactRepository implements ContactRepository {
     return this.contacts[index]
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<Contact> {
+    const deletedContact = this.contacts.find(contact => contact.id === id)
+    if (!deletedContact) {
+      throw new Error("Contact not found")
+    }
     this.contacts = this.contacts.filter(contact => contact.id !== id)
+    return deletedContact
   }
 }
 

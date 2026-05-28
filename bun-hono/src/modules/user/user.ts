@@ -1,5 +1,3 @@
-// import z from "zod"
-
 export type User = {
   id: string
   username: string

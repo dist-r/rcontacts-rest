@@ -1,47 +1,54 @@
 import ContactRepository from "./contact.respository";
 import Contact from "./contact";
 import AppError from "../../common/api.error";
-import { appLog } from "../../config/logger.pino";
+import ILogger from "../../config/logger/Ilogger";
 
 class ContactService {
   
-  constructor(private contactRepository: ContactRepository) {}
+  constructor(private contactRepository: ContactRepository, private logger: ILogger) {}
 
-  async createContact(name: string, email: string, phone: string, userId: string){
-    appLog.debug("Contact Service: createContact called")
-    appLog.debug({name, email, phone, userId})
-    try {
-      const contact = await this.contactRepository.create(name, email, phone, userId)
-      return contact
-    } catch (error){
-      throw new AppError(500, "Something error when creating contact")
-    }
+  async createContact(name: string, email: string, phone: string, userId: string): Promise<Contact> {
+    
+    this.logger.debug("Service Contact create Called")
+    const resultContact = await this.contactRepository.create(name, email, phone, userId)
+    return resultContact;
+   
   }
 
-  async findAllContact(userId: string){
+  async findAllContact(userId: string): Promise<Contact[]>{
+
+    this.logger.debug("Service Contact findAll Called", { userId })
     const contacts = await this.contactRepository.findAll(userId)
-    if (!contacts) {
-      throw new AppError(404, "Contacts not found")
-    }
     return contacts
+
   }
 
-  async updateContact(id: string, contact: Partial<Contact>){
+  async updateContact(id: string, userId: string, contact: Partial<Contact>) : Promise<Partial<Contact>> {
+
     const existingContact = await this.contactRepository.findByID(id)
     if (!existingContact) {
       throw new AppError(404, "Contact not found")
     }
+    if (existingContact.userId !== userId) {
+      throw new AppError(403, "Forbidden")
+    }
     const updatedContact = await this.contactRepository.update(id, contact)
     return updatedContact
+
   }
 
-  async deleteContact(id: string){
+  async deleteContact(id: string, userId: string) : Promise<Partial<Contact>> {
+
     const existingContact = await this.contactRepository.findByID(id)
     if(!existingContact){
       throw new AppError(404, "Contact not found")
     }
-    await this.contactRepository.delete(id)
-    return true
+    if (existingContact.userId !== userId){
+      throw new AppError(403, "Forbidden")
+    }
+    const deletedContact = await this.contactRepository.delete(id)
+    return deletedContact
+
   }
 }
 
