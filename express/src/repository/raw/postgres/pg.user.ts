@@ -29,14 +29,19 @@ export default class PgUserRepository implements IUserRepository {
       );
 
       return this.mapUser(result.rows[0]);
+    
     } catch (error) {
-      this.logger.error("Error creating user", error);
+      
+      this.logger.error("Error creating user", error, { username, name, email });
+      
       throw error;
     }
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
+
     try {
+      
       const result = await this.pool.query(
         `SELECT * FROM users WHERE email = $1`,
         [email]
@@ -47,14 +52,19 @@ export default class PgUserRepository implements IUserRepository {
       }
 
       return this.mapUser(result.rows[0]);
+    
     } catch (error) {
-      this.logger.error("Error fetching user by email", error);
+      
+      this.logger.error("Error fetching user by email", error, { email });
+      
       throw error;
     }
   }
 
   async getUserById(id: string): Promise<User | null> {
+
     try {
+      
       const result = await this.pool.query(
         `SELECT * FROM users WHERE id = $1`,
         [id]
@@ -62,22 +72,31 @@ export default class PgUserRepository implements IUserRepository {
 
       if (result.rows.length === 0) {
         return null;
+      
       }
       return this.mapUser(result.rows[0]);
+    
     } catch (error) {
-      this.logger.error("Error fetching user by id", error);
+      
+      this.logger.error("Error fetching user by id", error, { id });
+      
       throw error;
+    
     }
   }
 
   private mapUser(row: any): User {
+
     const user: User = {
       id: row.id,
       username: row.username,
       name: row.name,
       email: row.email,
       password: row.password
+    
     };
+    
     return user;
+  
   }
 }

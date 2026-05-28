@@ -1,6 +1,5 @@
 import ContactService from "./contact.service";
 import { Request, Response } from "express";
-// import ILogger from "../../config/log/ilogger";
 import { CreateContactDto, UpdateContactDto, DeleteContactDto } from "./contact.dto";
 import { CreateContactType, UpdateContactType, DeleteContactType } from "./contact.dto";
 import {CreateContactResponseDto, UpdateContactResponseDto, DeleteContactResponseDto, GetAllContactsResponseDto} from "./contact.dto";
@@ -13,12 +12,15 @@ class ContactController {
   ){}
 
   async createContact(req: Request, res: Response): Promise<void> {
+    
     const userFromBeforeHandler = (req as any).userId as string;
+    
     const { name, email, phone } = req.body as CreateContactDto;
 
     const parseResult: CreateContactDto = CreateContactType.parse({ name, email, phone });
 
     const result = await this.contactService.createContact(userFromBeforeHandler, parseResult.name, parseResult.email, parseResult.phone);
+
     const dataResponse: CreateContactResponseDto = {
       id: result.id,
       name: result.name,
@@ -28,12 +30,16 @@ class ContactController {
 
     const response : ApiResponse<CreateContactResponseDto> = {
       message: "Contact created successfully",
+      success: true,
       data: dataResponse,
     }
+    
     res.status(201).json(response);
+  
   }
 
   async updateContact(req: Request, res: Response): Promise<void> {
+
     const userFromBeforeHandler = (req as any).userId as string;
     const { id } = req.params as { id: string };
     const { name, email, phone } = req.body as UpdateContactDto;
@@ -50,9 +56,12 @@ class ContactController {
 
     const response : ApiResponse<UpdateContactResponseDto> = {
       message: "Contact updated successfully",
+      success: true,
       data: dataResponse,
     }
+
     res.status(200).json(response);
+
   }
 
   async deleteContact(req: Request, res: Response): Promise<void> {
@@ -63,14 +72,16 @@ class ContactController {
 
     await this.contactService.deleteContact(parseResult.id, userFromBeforeHandler);
 
-    const response : ApiResponse<DeleteContactResponseDto> = {
+    const response : ApiResponse<null> = {
       message: "Contact deleted successfully",
-      data: { message: "Contact deleted successfully" },
+      success: true,
+      data: null,
     }
     res.status(200).json(response);
   }
 
   async getAllContacts(req: Request, res: Response): Promise<void> {
+
     const userFromBeforeHandler = (req as any).userId as string;
 
     const result = await this.contactService.getAllContacts(userFromBeforeHandler);
@@ -88,8 +99,10 @@ class ContactController {
     
     const response: ApiResponse<GetAllContactsResponseDto[]> = {
       message: "Contacts retrieved successfully",
+      success: true,
       data: dataResponse,
     };
+    
     res.status(200).json(response);
   }
 }

@@ -1,6 +1,5 @@
 import UserService from "./user.service";
-import { Request, Response, NextFunction } from "express";
-// import AppError from "../../shared/custom.error";
+import { Request, Response } from "express";
 import { CreateUserDto, CreateUserType, LoginUserResponseDto, LoginUserDto, LoginUserType} from "./user.dto";
 import ApiResponse from "../../shared/api.response";
 import { CreateUserResponseDto } from "./user.dto";
@@ -27,6 +26,7 @@ class UserController {
 
     const response : ApiResponse<CreateUserResponseDto> = {
       message: "User registered successfully",
+      success: true,
       data: dataResponse,
     }
 
@@ -38,6 +38,7 @@ class UserController {
     const { email, password } = req.body;
 
     const parseResult: LoginUserDto = LoginUserType.parse({ email, password });
+
     const token = await this.userService.loginUser(parseResult.email, parseResult.password);
 
     const dataResponse : LoginUserResponseDto = {
@@ -46,6 +47,7 @@ class UserController {
     
     const response : ApiResponse<LoginUserResponseDto> = {
       message: "User logged in successfully",
+      success: true,
       data: dataResponse,
     }
 
@@ -53,8 +55,8 @@ class UserController {
   }
 
   async profileUser(req: Request, res: Response): Promise<void> {
+
     const id = (req as any).userId as string;
-    console.log("User ID from token:", id);
 
     const data = await this.userService.userProfile(id);
 
@@ -73,6 +75,7 @@ class UserController {
 
     const response : ApiResponse<ProfileUserResponseDto> = {
       message: "User profile retrieved successfully",
+      success: true,
       data: dataResponse,
     }
 
