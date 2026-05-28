@@ -12,7 +12,7 @@ public class UserService(
     private readonly IUserRepository _userRepository = userRepository;
     private readonly ILogger<UserService> _logger = logger;
     private readonly JwtService _jwtService = jwtService;
-    public async Task<User> Register(string username, string name, string email, string password)
+    public async Task<RegisterResult> Register(string username, string name, string email, string password)
     {
         var user = new User
         {
@@ -33,7 +33,7 @@ public class UserService(
     
         var result = await _userRepository.Create(user.Id, user.Username, user.Name, user.Email, hashedPassword);
 
-        var userWithoutPassword = new User
+        var userWithoutPassword = new RegisterResult
         {
             Id = result.Id,
             Username = result.Username,
@@ -44,7 +44,7 @@ public class UserService(
         return userWithoutPassword;
     }
 
-    public async Task<string> Login(string email, string password)
+    public async Task<LoginResult> Login(string email, string password)
     {
         var user = await _userRepository.GetUserByEmail(email);
         if (user == null)
@@ -74,7 +74,12 @@ public class UserService(
 
         var token = _jwtService.GenerateAccessToken(userId, user.Email);
 
-        return token;
+       LoginResult result = new()
+       {
+            Token = token
+        };
+
+        return result;
     }
 
     public async Task<User> Profile(string id)

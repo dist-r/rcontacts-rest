@@ -1,51 +1,56 @@
 namespace AspDotNet.Shared;
 
-public class ExceptionMiddleware
-{
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionMiddleware> _logger;
+using Microsoft.AspNetCore.Mvc;
 
-    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
+public class ExceptionMiddleware(
+    RequestDelegate next,
+    ILogger<ExceptionMiddleware> logger)
+{
+    private readonly RequestDelegate _next = next;
+    private readonly ILogger<ExceptionMiddleware> _logger = logger;
 
     public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await _next(context); 
+            await _next(context);
         }
         catch (AppException ex)
         {
-            _logger.LogError(ex, "Error Flow Bussinises");
-            context.Response.StatusCode = ex.Code;
-            context.Response.ContentType = "application/json";
+            _logger.LogError(ex, "Business exception occurred");
 
-            var response = new
-            {
-                message = "Terjadi Kesalahan",
-                detail = ex.Message
-            };
-            
-            await context.Response.WriteAsJsonAsync(response);
+            await WriteJsonResponse(
+                context,
+                ex.Code,
+                ex.Message
+            );
         }
-
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception terjadi");
+            _logger.LogError(ex, "Unhandled exception occurred");
 
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "application/json";
-
-            var response = new
-            {
-                message = "Terjadi kesalahan pada server",
-                detail = ex.Message
-            };
-
-            await context.Response.WriteAsJsonAsync(response);
+            await WriteJsonResponse(
+                context,
+                StatusCodes.Status500InternalServerError,
+                "Internal server error"
+            );
         }
+    }
+
+    private static Task WriteJsonResponse(
+        HttpContext context,
+        int statusCode,
+        string message)
+    {
+        context.Response.StatusCode = statusCode;
+        context.Response.ContentType = "application/json";
+
+        var response = new ApiResponse<object?>(
+            message,
+            false,
+            null
+        );
+
+        return context.Response.WriteAsJsonAsync(response);
     }
 }

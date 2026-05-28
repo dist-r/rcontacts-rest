@@ -1,0 +1,41 @@
+name: aspdotnet
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: aspdotnet-pgdb
+    environment:
+      POSTGRES_USER: pgdb
+      POSTGRES_PASSWORD: pgdb
+      POSTGRES_DB: pgdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../../migration:/docker-entrypoint-initdb.d:ro
+      - aspdotnet_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pgdb -d pgdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    container_name: aspdotnet-app
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:3000
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=pgdb;Username=pgdb;Password=pgdb
+      Jwt__SecretKey: SUPER_SECRET_KEY_MINIMAL_32_CHARACTERS
+      Jwt__Issuer: AspDotNetApi
+      Jwt__Audience: AspDotNetClient
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  aspdotnet_pgdata:

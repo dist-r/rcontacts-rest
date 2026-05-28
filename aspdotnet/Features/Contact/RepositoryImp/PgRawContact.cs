@@ -4,19 +4,14 @@ using AspDotNet.Features.Contact;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-public class PgRawContactRepository : IContactRepository
+public class PgRawContactRepository(IConfiguration configuration) : IContactRepository
 {
-    private readonly string _connectionString;
-
-    public PgRawContactRepository(IConfiguration configuration)
-    {
-        _connectionString =
+    private readonly string _connectionString =
             configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException(
                 "DefaultConnection is not configured");
-    }
 
-    public async Task<Contact?> GetContactById(string id)
+  public async Task<Contact?> GetContactById(string id)
     {
         await using var connection =
             new NpgsqlConnection(_connectionString);

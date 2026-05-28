@@ -6,15 +6,10 @@ using AspDotNet.Shared;
 
 [ApiController]
 [Authorize]
-[Route("api/v1/")]
-public class ContactController : ControllerBase
+[Route("api/v2/")]
+public class ContactController(ContactService contactService) : ControllerBase
 {
-  private readonly ContactService _contactService;
-
-  public ContactController(ContactService contactService)
-  {
-    _contactService = contactService;
-  }
+  private readonly ContactService _contactService = contactService;
 
   [HttpPost("contacts")]
   public async Task<IActionResult> CreateContact([FromBody] CreateContactRequest request)
@@ -28,7 +23,7 @@ public class ContactController : ControllerBase
     var result = await _contactService.CreateContact(userId, request.Name, request.Email, request.Phone);
     return Created(
       $"/api/v1/contacts/{result.Id}"
-      ,new ApiResponse<CreateContactResponse>("Success", new CreateContactResponse
+      ,new ApiResponse<CreateContactResponse>("Contact create succesfully", true, new CreateContactResponse
     {
       Id = result.Id,
       UserId = result.UserId,
@@ -38,7 +33,7 @@ public class ContactController : ControllerBase
     }));
   }
 
-[HttpGet("contacts")]
+  [HttpGet("contacts")]
   public async Task<IActionResult> GetAllContacts()
   {
     var userId = User.FindFirst("userId")?.Value;
@@ -48,7 +43,7 @@ public class ContactController : ControllerBase
     }
 
     var result = await _contactService.GetAllContacts(userId);
-    return Ok(new ApiResponse<GetAllContactsResponse>("Success", new GetAllContactsResponse
+    return Ok(new ApiResponse<GetAllContactsResponse>("Contacts retrieved succesfully", true, new GetAllContactsResponse
     {
       Contacts = result
     }));
@@ -65,7 +60,7 @@ public class ContactController : ControllerBase
 
     var result = await _contactService.UpdateContact(id, userId, request.Name, request.Email, request.Phone);
 
-    return Ok(new ApiResponse<UpdateContactResponse>("Success", new UpdateContactResponse
+    return Ok(new ApiResponse<UpdateContactResponse>("Update contact succesfully",true,  new UpdateContactResponse
     {
       Id = result.Id,
       UserId = result.UserId,
@@ -87,6 +82,7 @@ public class ContactController : ControllerBase
 
     await _contactService.DeleteContact(contactId, userId);
 
-    return NoContent();
+    return Ok(new ApiResponse<object?>("Delete contact succesfully",true,  null));
+    
   }
 }
