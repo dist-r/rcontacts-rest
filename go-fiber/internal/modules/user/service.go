@@ -9,34 +9,43 @@ import (
 
 type UserService struct {
 	repo UserRepository
+	log  app.ILogger
 }
 
-func NewUserService(repo UserRepository) *UserService {
-	return &UserService{repo: repo}
+func NewUserService(repo UserRepository, log app.ILogger) *UserService {
+	return &UserService{repo: repo, log: log}
 }
 
-func (u *UserService) RegisterUser(ctx context.Context, user *User) error {
+func (u *UserService) RegisterUser(ctx context.Context, user *User) (*UserResult, error) {
 	existingUser, err := u.repo.GetUserByEmail(ctx, user.Email)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
 	if existingUser != nil {
-		return app.NewError(409, "user already exists")
+		return nil, app.NewError(409, "user already exists")
 	}
-
 	hashedPassword, err := utils.Hashed(user.Password)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
 	user.Password = hashedPassword
-
-	err = u.repo.CreateUser(ctx, user)
+	newUser, err := u.repo.CreateUser(ctx, user)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	userResult := &UserResult{
+		ID:       newUser.ID,
+		Username: newUser.Username,
+		Name:     newUser.Name,
+		Email:    newUser.Email,
+	}
+	u.log.Debug("User Registration was succesfully", "user", DataLoggerUser{
+		ID:       newUser.ID,
+		Username: newUser.Username,
+		Name:     newUser.Name,
+		Email:    newUser.Email,
+	})
+	return userResult, nil
 }
 
 func (u *UserService) LoginUser(ctx context.Context, email string, password string) (string, error) {
@@ -44,29 +53,30 @@ func (u *UserService) LoginUser(ctx context.Context, email string, password stri
 	if err != nil {
 		return "", err
 	}
-
 	if existingUser == nil {
 		return "", app.NewError(404, "user not found")
 	}
-
 	isValid, err := utils.Compare(password, existingUser.Password)
 	if err != nil {
 		return "", err
 	}
-
 	if !isValid {
 		return "", app.NewError(401, "invalid credentials")
 	}
-
+	u.log.Debug("User Login was succesfully", "user", DataLoggerUser{
+		ID:       existingUser.ID,
+		Username: existingUser.Username,
+		Name:     existingUser.Name,
+		Email:    existingUser.Email,
+	})
 	token, err := utils.GenerateToken(existingUser.ID, existingUser.Email)
 	if err != nil {
 		return "", err
 	}
-
 	return token, nil
 }
 
-func (u *UserService) GetUserProfile(ctx context.Context, id string) (*User, error) {
+func (u *UserService) GetUserProfile(ctx context.Context, id string) (*UserResult, error) {
 	user, err := u.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -74,5 +84,11 @@ func (u *UserService) GetUserProfile(ctx context.Context, id string) (*User, err
 	if user == nil {
 		return nil, app.NewError(404, "user not found")
 	}
-	return user, nil
+	userResult := &UserResult{
+		ID:       user.ID,
+		Username: user.Username,
+		Name:     user.Name,
+		Email:    user.Email,
+	}
+	return userResult, nil
 }

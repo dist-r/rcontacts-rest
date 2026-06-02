@@ -6,6 +6,7 @@ import (
 
 	"time"
 
+	"github.com/dist-r/rcontacts-rest/go-fiber/pkg/app"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -26,12 +27,19 @@ func (ch *ContactHandler) CreateContact(c *fiber.Ctx) error {
 	if err := c.BodyParser(contact); err != nil {
 		return err
 	}
-	err := ch.service.CreateContact(context.Background(), contact)
+
+	result, err := ch.service.CreateContact(context.Background(), contact)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(201).JSON(&ContactResponse{Message: "Contact created successfully"})
+	response := app.APIResponse[Contact]{
+		Success: true,
+		Message: "Contact created successfully",
+		Data:    *result,
+	}
+	return c.Status(201).JSON(response)
+
 }
 
 func (ch *ContactHandler) GetAllContacts(c *fiber.Ctx) error {
@@ -44,7 +52,12 @@ func (ch *ContactHandler) GetAllContacts(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(200).JSON(contacts)
+	response := app.APIResponse[[]*Contact]{
+		Success: true,
+		Message: "Contacts fetched successfully",
+		Data:    contacts,
+	}
+	return c.Status(200).JSON(response)
 }
 
 func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
@@ -57,12 +70,17 @@ func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := ch.service.UpdateContact(context.Background(), contact)
+	result, err := ch.service.UpdateContact(context.Background(), contact)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(200).JSON(&ContactResponse{Message: "Contact updated successfully"})
+	response := app.APIResponse[Contact]{
+		Success: true,
+		Message: "Contact updated successfully",
+		Data:    *result,
+	}
+	return c.Status(200).JSON(response)
 }
 
 func (ch *ContactHandler) DeleteContact(c *fiber.Ctx) error {
@@ -75,5 +93,10 @@ func (ch *ContactHandler) DeleteContact(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.SendStatus(204)
+	response := app.APIResponse[any]{
+		Success: true,
+		Message: "Contact deleted successfully",
+		Data:    nil,
+	}
+	return c.Status(200).JSON(response)
 }

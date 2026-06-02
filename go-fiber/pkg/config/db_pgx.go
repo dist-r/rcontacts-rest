@@ -50,5 +50,4 @@ func InitDB() {
 	}
 
 	DB = pool
-	log.Println("✅ Connected to PostgreSQL via pgxpool")
 }
