@@ -3,17 +3,17 @@ package org.distr.rcontacts.exception;
 import java.util.List;
 
 import org.distr.rcontacts.app.ApiResponse;
-import org.slf4j.Logger;
+// import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.LoggerFactory;
 
 @RestControllerAdvice
 public class GlobalException {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
+    // private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ApiResponse<Object>> handleAppException(AppException ex) {
