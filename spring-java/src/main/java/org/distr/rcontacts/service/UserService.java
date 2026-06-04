@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Optional;
 
+import org.distr.rcontacts.contracts.UserContract;
 import org.distr.rcontacts.entities.UserEntity;
 import org.distr.rcontacts.exception.AppException;
 
@@ -21,21 +21,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public String test() {
-        return "Hello from UserService!";
-    }
-
     @GetMapping("/profile")
-    public Map<String, Object>getUserById(String userId){
-        UserEntity user = userRepository.findById(userId).orElseThrow(
-            () -> new AppException("User with id " + userId + " not found.", 404)
+    public UserContract getUserProfile(String userId){
+        Optional<UserEntity> user = userRepository.findById(userId);
+        if(user.isEmpty()){
+            throw new AppException("User not found", 404);
+        }
+        return new UserContract(
+            user.get().getId(),
+            user.get().getUsername(),
+            user.get().getName(),
+            user.get().getEmail()
         );
-        
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", user.getId());
-        response.put("username", user.getUsername());
-        response.put("name", user.getName());
-        response.put("email", user.getEmail());
-        return response;
     }
 }

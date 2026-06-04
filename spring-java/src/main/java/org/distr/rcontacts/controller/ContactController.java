@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-import java.util.Map;
 
 import org.distr.rcontacts.dto.CreateContact;
 import org.distr.rcontacts.dto.UpdateContactReq;
 import org.distr.rcontacts.service.ContactService;
+import org.distr.rcontacts.app.ApiResponse;
+import org.distr.rcontacts.contracts.ContactContract;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v2")
 public class ContactController {
 
     private ContactService contactService;
@@ -30,48 +31,49 @@ public class ContactController {
     }
 
     @GetMapping("/contacts")
-    public List<?> getAllContacts() {
+    public ResponseEntity<ApiResponse<List<ContactContract>>> getAllContacts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
-        return contactService.getAllContactsByUserId(userId);
+        List<ContactContract> contacts = contactService.getAllContactsByUserId(userId);
+        return ResponseEntity.ok(new ApiResponse<>("Contacts retrieved successfully", true, contacts));
     }
 
     @PostMapping("/contacts")
-    public ResponseEntity<Map<String, Object>>createContact(
+    public ResponseEntity<ApiResponse<ContactContract>>createContact(
         @RequestBody CreateContact createContactRequest
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
-        contactService.CreateContact(
+        ContactContract createdContact = contactService.CreateContact(
             userId,
             createContactRequest.name(),
             createContactRequest.phone(),
             createContactRequest.email()
         );
-        return ResponseEntity.ok(Map.of("message", "Contact created successfully"));
+        return ResponseEntity.ok(new ApiResponse<>("Contact created successfully", true, createdContact));
     }
 
     @PutMapping("/contacts/{contactId}")
-    public ResponseEntity<Map<String, Object>>updateContact(
+    public ResponseEntity<ApiResponse<ContactContract>>updateContact(
         @RequestBody UpdateContactReq updateContactRequest, 
         @PathVariable String contactId
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
-        contactService.updateContact(
-            (String) contactId,
+        ContactContract updatedContact = contactService.updateContact(
+            contactId,
             userId,
             updateContactRequest.name(),
             updateContactRequest.phone(),
             updateContactRequest.email()
         );
-        return ResponseEntity.ok(Map.of("message", "Contact updated successfully"));
+        return ResponseEntity.ok(new ApiResponse<>("Contact updated successfully", true, updatedContact));
     }
 
     @DeleteMapping("/contacts/{contactId}")
-    public ResponseEntity<Map<String, Object>> deleteContact(@PathVariable String contactId) {
+    public ResponseEntity<ApiResponse<Object>> deleteContact(@PathVariable String contactId) {
         contactService.deleteContact(contactId);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.ok(new ApiResponse<>("Contact deleted successfully", true, null));
     }
 
 }

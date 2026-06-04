@@ -1,7 +1,7 @@
 package org.distr.rcontacts.exception;
 
 public class AppException extends RuntimeException {
-    
+
     private final String message;
     private final int code;
 

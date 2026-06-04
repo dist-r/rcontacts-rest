@@ -21,31 +21,45 @@ public class ContactRepositoryPostgres implements ContactRepository {
     }
 
     @Override
-    public void create(ContactEntity contact) {
-        // Implementation for creating a contact
+    public ContactEntity create(ContactEntity contact) {
+        var sql = """
+            INSERT INTO contacts (id, user_id, name, phone, email)
+            VALUES (?, ?, ?, ?, ?)
+            RETURNING id, user_id, name, phone, email
+            """;
 
-        try (var connection = dataSource.getConnection()) {
-            var sql = "INSERT INTO contacts (id, user_id, name, phone, email) VALUES (?, ?, ?, ?, ?)";
-            try (var statement = connection.prepareStatement(sql)) {
-                UUID id = UUID.randomUUID();
-                statement.setString(1, id.toString());
-                statement.setString(2, contact.getUserId());
-                statement.setString(3, contact.getName());
-                statement.setString(4, contact.getPhone());
-                statement.setString(5, contact.getEmail());
-                statement.executeUpdate();
+        try (
+            var connection = dataSource.getConnection();
+            var statement = connection.prepareStatement(sql)
+        ) {
+            var id = UUID.randomUUID().toString();
+
+            statement.setString(1, id);
+            statement.setString(2, contact.getUserId());
+            statement.setString(3, contact.getName());
+            statement.setString(4, contact.getPhone());
+            statement.setString(5, contact.getEmail());
+
+            try (var rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return new ContactEntity(
+                            rs.getString("id"),
+                            rs.getString("user_id"),
+                            rs.getString("name"),
+                            rs.getString("phone"),
+                            rs.getString("email")
+                    );
+                }
             }
+            throw new RuntimeException("Insert succeeded but no row returned");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // throw new RuntimeException(e);
+            throw new RuntimeException("Failed to create contact", e);
         }
     }
 
     @Override
     public List<ContactEntity> findAllByUserId(String userId) {
-        // Implementation for finding all contacts by user ID
+     
         List<ContactEntity> contacts = new ArrayList<>();
 
         try (var connection = dataSource.getConnection()) {
@@ -69,6 +83,7 @@ public class ContactRepositoryPostgres implements ContactRepository {
             throw new RuntimeException(e);
         } catch (Exception e) {
             e.printStackTrace();
+           throw new RuntimeException(e);
         }
         return contacts;
     }
@@ -103,25 +118,38 @@ public class ContactRepositoryPostgres implements ContactRepository {
         return Optional.empty();
     }
 
-    @Override
-    public void update(ContactEntity contact) {
+   @Override
+    public ContactEntity update(ContactEntity contact) {
+        try (
+            var connection = dataSource.getConnection();
+            var statement = connection.prepareStatement("""
+                UPDATE contacts
+                SET name = ?, phone = ?, email = ?
+                WHERE id = ?
+                RETURNING id, user_id, name, phone, email
+            """)
+        ) {
+            statement.setString(1, contact.getName());
+            statement.setString(2, contact.getPhone());
+            statement.setString(3, contact.getEmail());
+            statement.setString(4, contact.getId());
 
-        // Implementation for updating a contact
-        try(var connection = dataSource.getConnection()) {
-            var sql = "UPDATE contacts SET name = ?, phone = ?, email = ? WHERE id = ?";
-            try (var statement = connection.prepareStatement(sql)) {
-                statement.setString(1, contact.getName());
-                statement.setString(2, contact.getPhone());
-                statement.setString(3, contact.getEmail());
-                statement.setString(4, contact.getId());
-                statement.executeUpdate();
+            try (var rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return new ContactEntity(
+                        rs.getString("id"),
+                        rs.getString("user_id"),
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("email")
+                    );
+                }
             }
+
+            throw new RuntimeException("Contact not found");
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
     
     @Override
