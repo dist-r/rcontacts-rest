@@ -19,24 +19,39 @@ public class UserRepositoryPostgres implements UserRepository {
     }
 
     @Override
-    public void create(UserEntity user) {
-        // Implementation for creating a user
-        try(var connection = dataSource.getConnection()) {
-            var sql = "INSERT INTO users (id, username, name, password, email) VALUES (?, ?, ?, ?, ?)";
-            try (var statement = connection.prepareStatement(sql)) {
-                UUID id = UUID.randomUUID();
-                statement.setString(1, id.toString());
-                statement.setString(2, user.getUsername());
-                statement.setString(3, user.getName());
-                statement.setString(4, user.getPassword());
-                statement.setString(5, user.getEmail());
-                statement.executeUpdate();
+    public UserEntity create(UserEntity user) {
+       
+        var sql = """
+        INSERT INTO users (id, username, name, password, email)
+        VALUES (?, ?, ?, ?, ?)
+        RETURNING id, username, name, password, email
+        """;
+        try (
+            var connection = dataSource.getConnection();
+            var statement = connection.prepareStatement(sql)
+        ) {
+            var id = UUID.randomUUID().toString();
+
+            statement.setString(1, id);
+            statement.setString(2, user.getUsername());
+            statement.setString(3, user.getName());
+            statement.setString(4, user.getPassword());
+            statement.setString(5, user.getEmail());
+
+            try (var rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return new UserEntity(
+                            rs.getString("id"),
+                            rs.getString("username"),
+                            rs.getString("name"),
+                            rs.getString("password"),
+                            rs.getString("email")
+                    );
+                }
             }
+            throw new RuntimeException("Insert succeeded but no row returned");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // throw new RuntimeException(e);
+            throw new RuntimeException("Failed to create user", e);
         }
     }
 

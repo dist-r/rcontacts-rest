@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ContactRepository {
 
-    public void create(ContactEntity contact);
-    public void update(ContactEntity contact);
+    public ContactEntity create(ContactEntity contact);
+    public ContactEntity update(ContactEntity contact);
     public Optional<ContactEntity> findById(String id);
     public List<ContactEntity> findAllByUserId(String userId);
     public void delete(String id);

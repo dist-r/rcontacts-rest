@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.distr.rcontacts.repository.sql.ContactRepository;
 import org.distr.rcontacts.entities.ContactEntity;
+import org.distr.rcontacts.exception.AppException;
+import org.distr.rcontacts.contracts.ContactContract;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,7 @@ public class ContactService {
     }
 
     @Transactional
-    public void CreateContact(String userId, String name, String phone, String email){
+    public ContactContract CreateContact(String userId, String name, String phone, String email){
         ContactEntity contact = new ContactEntity(
             null,
             userId,
@@ -30,21 +32,41 @@ public class ContactService {
             phone,
             email
         );
-        contactRepository.create(contact);
+        var result = contactRepository.create(contact);
+        var contactContract = new ContactContract(
+            result.getId(),
+            result.getUserId(),
+            result.getName(),
+            result.getPhone(),
+            result.getEmail()
+        );
+        return contactContract;
+        
     }
 
     @Transactional( readOnly = true )
-    public List<ContactEntity> getAllContactsByUserId(String userId){
-        return contactRepository.findAllByUserId(userId);
+    public List<ContactContract> getAllContactsByUserId(String userId){
+        var contacts = contactRepository.findAllByUserId(userId);
+        return contacts.stream().map(contact -> new ContactContract(
+            contact.getId(),
+            contact.getUserId(),
+            contact.getName(),
+            contact.getPhone(),
+            contact.getEmail()
+        )).toList();
     }
 
     @Transactional
     public void deleteContact(String contactId){
+        var existingContact = contactRepository.findById(contactId);
+        if(existingContact.isEmpty()){
+            throw new AppException("Contact not Found", 404);
+        }
         contactRepository.delete(contactId);
     }
 
     @Transactional
-    public void updateContact(String contactId, String userId,  String name, String phone, String email){
+    public ContactContract updateContact(String contactId, String userId,  String name, String phone, String email){
         ContactEntity contact = new ContactEntity(
             contactId,
             userId,
@@ -52,7 +74,22 @@ public class ContactService {
             phone,
             email
         );
-        contactRepository.update(contact);
-    }    
+        var existingContact = contactRepository.findById(contactId);
+        if(existingContact.isEmpty()){
+            throw new AppException("Contact not Found", 404);
+        }
+        if(!existingContact.get().getUserId().equals(userId)){
+            throw new AppException("Unauthorized", 403);
+        }
+        var result = contactRepository.update(contact);
+        var contactContract = new ContactContract(
+            result.getId(),
+            result.getUserId(),
+            result.getName(),
+            result.getPhone(),
+            result.getEmail()
+        );
+        return contactContract;
+    }
 
 }

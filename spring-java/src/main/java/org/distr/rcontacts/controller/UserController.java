@@ -1,5 +1,7 @@
 package org.distr.rcontacts.controller;
 
+import org.distr.rcontacts.app.ApiResponse;
+import org.distr.rcontacts.contracts.UserContract;
 import org.distr.rcontacts.service.UserService;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v2/users")
 public class UserController {
 
     private UserService userService;
@@ -22,12 +22,12 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Map<String, Object>>getProfileUser() {
+    public ResponseEntity<ApiResponse<UserContract>>getProfileUser() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) auth.getPrincipal();
-        Map<String, Object> profile = userService.getUserById(userId);
-
-        return ResponseEntity.ok(profile);
+        UserContract profile = userService.getUserProfile(userId);
+        return ResponseEntity.ok(new ApiResponse<>("User profile retrieved successfully", true, profile));
+    
     }
 }
