@@ -37,7 +37,7 @@ Repository containing REST API implementations for a contact-management app (`rc
 The frontend/client for this API is published at the link above. You can use it to interact with this API or as a reference.
 
 > [!IMPORTANT]
-> The `bun-hono`, `aspdotnet`, and `express` implementations already use the API v2 response format. Because of that response change, they are probably not fully compatible with the current client application yet. Client integration and API v2 usage are still in progress.
+> The `bun-hono`, `go-fiber`, `spring-java`, `aspdotnet`, and `express` implementations already use the API v2 response format. Because of that response change, they are probably not fully compatible with the current client application yet. Client integration and API v2 usage are still in progress.
 
 ## Bun Hono Implementation
 
@@ -106,6 +106,9 @@ docker compose -f bun-hono/docker/docker-compose.yml up -d --build
 
 A production-ready REST API built with Go and Fiber framework, designed for optimal performance and concurrency. This implementation demonstrates Go's strengths in building scalable backend services with excellent memory efficiency and fast execution.
 
+> [!IMPORTANT]
+> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
+
 ### How to Run
 
 #### Prerequisites
@@ -159,6 +162,9 @@ docker compose -f go-fiber/docker/docker-compose.yml up -d --build
 **Implemented by Uzumaki Bayu (admin)**
 
 An enterprise-grade REST API implementation using Spring Boot framework with Java. This project demonstrates best practices for building scalable, maintainable backend services with modern Spring ecosystem components.
+
+> [!IMPORTANT]
+> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
 
 ### How to Run
 
@@ -319,8 +325,14 @@ docker compose -f express/docker/docker-compose.yml up -d --build
 
 ## Upcoming Implementations
 
+- `nest-nodejs` – Node.js implementation using NestJS (coming soon).
+- `go-gin` – go implementation using Gin (coming soon).
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
 - `nest-nodejs` – Node.js implementation using NestJS (coming soon).
+- `php-laravel` – PHP implementation using Laravel (coming soon).
+
+---
+
 
 ## Database
 
