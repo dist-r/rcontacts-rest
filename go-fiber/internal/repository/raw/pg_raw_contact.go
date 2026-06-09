@@ -54,7 +54,6 @@ func (r *PGRawContactRepository) GetAllContactsByUserID(ctx context.Context, use
 		userID,
 	)
 	if err != nil {
-		r.log.Error("Error fetching contacts", err)
 		return nil, err
 	}
 	defer rows.Close()

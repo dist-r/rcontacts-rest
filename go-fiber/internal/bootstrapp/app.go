@@ -54,6 +54,13 @@ func SetupApp() {
 				Message: message,
 				Data:    nil,
 			}
+
+			appLogger.Error(err.Error(),
+				"code", code,
+				"message", message,
+				"path", c.Path(),
+				"method", c.Method(),
+			)
 			return c.Status(code).JSON(response)
 		},
 	})

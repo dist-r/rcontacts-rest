@@ -1,10 +1,7 @@
 package contact
 
 import (
-	"context"
 	"fmt"
-
-	"time"
 
 	"github.com/dist-r/rcontacts-rest/go-fiber/pkg/app"
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +16,7 @@ func NewContactHandler(service ContactService) *ContactHandler {
 }
 
 func (ch *ContactHandler) CreateContact(c *fiber.Ctx) error {
-	context.Background()
+	ctx := c.UserContext()
 	contact := &Contact{}
 	userId := c.Locals("userID").(string)
 	fmt.Println(userId)
@@ -28,7 +25,7 @@ func (ch *ContactHandler) CreateContact(c *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := ch.service.CreateContact(context.Background(), contact)
+	result, err := ch.service.CreateContact(ctx, contact)
 	if err != nil {
 		return err
 	}
@@ -47,7 +44,8 @@ func (ch *ContactHandler) GetAllContacts(c *fiber.Ctx) error {
 	if !ok {
 		return fiber.ErrUnauthorized
 	}
-	contacts, err := ch.service.FindAllContact(context.Background(), userID)
+	ctx := c.UserContext()
+	contacts, err := ch.service.FindAllContact(ctx, userID)
 	if err != nil {
 		return err
 	}
@@ -61,7 +59,7 @@ func (ch *ContactHandler) GetAllContacts(c *fiber.Ctx) error {
 }
 
 func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
-	context.Background()
+	ctx := c.UserContext()
 	contactId := c.Params("id")
 
 	contact := &Contact{}
@@ -70,7 +68,7 @@ func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := ch.service.UpdateContact(context.Background(), contact)
+	result, err := ch.service.UpdateContact(ctx, contact)
 	if err != nil {
 		return err
 	}
@@ -85,9 +83,7 @@ func (ch *ContactHandler) UpdateContact(c *fiber.Ctx) error {
 
 func (ch *ContactHandler) DeleteContact(c *fiber.Ctx) error {
 	contactId := c.Params("id")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
+	ctx := c.UserContext()
 	err := ch.service.DeleteContact(ctx, contactId)
 	if err != nil {
 		return err

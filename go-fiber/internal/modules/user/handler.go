@@ -4,8 +4,6 @@ import (
 	"github.com/dist-r/rcontacts-rest/go-fiber/internal/modules/auth"
 	"github.com/dist-r/rcontacts-rest/go-fiber/pkg/app"
 	"github.com/gofiber/fiber/v2"
-
-	"context"
 )
 
 type UserHandler struct {
@@ -17,7 +15,7 @@ func NewUserHandler(us UserService) *UserHandler {
 }
 
 func (uh *UserHandler) RegisterUser(c *fiber.Ctx) error {
-	ctx := context.Background()
+	ctx := c.UserContext()
 	registerDto := auth.RegisterRequest{}
 	user := &User{}
 	if err := c.BodyParser(&registerDto); err != nil {
@@ -41,7 +39,7 @@ func (uh *UserHandler) RegisterUser(c *fiber.Ctx) error {
 }
 
 func (uh *UserHandler) LoginUser(c *fiber.Ctx) error {
-	ctx := context.Background()
+	ctx := c.UserContext()
 	loginDto := auth.LoginRequest{}
 	if err := c.BodyParser(&loginDto); err != nil {
 		return err
@@ -60,7 +58,7 @@ func (uh *UserHandler) LoginUser(c *fiber.Ctx) error {
 }
 
 func (uh *UserHandler) GetUserProfile(c *fiber.Ctx) error {
-	ctx := context.Background()
+	ctx := c.UserContext()
 	userID := c.Locals("userID").(string)
 	user, err := uh.us.GetUserProfile(ctx, userID)
 	if err != nil {
