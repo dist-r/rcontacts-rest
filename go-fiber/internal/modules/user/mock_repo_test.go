@@ -3,12 +3,12 @@ package user
 import "context"
 
 type MockUserRepository struct {
-	CreateUserFunc     func(ctx context.Context, user *User) error
+	CreateUserFunc     func(ctx context.Context, user *User) (*User, error)
 	GetUserByIDFunc    func(ctx context.Context, id string) (*User, error)
 	GetUserByEmailFunc func(ctx context.Context, email string) (*User, error)
 }
 
-func (m *MockUserRepository) CreateUser(ctx context.Context, user *User) error {
+func (m *MockUserRepository) CreateUser(ctx context.Context, user *User) (*User, error) {
 	return m.CreateUserFunc(ctx, user)
 }
 

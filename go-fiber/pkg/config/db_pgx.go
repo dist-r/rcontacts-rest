@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 
-	// "strconv"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -50,5 +49,4 @@ func InitDB() {
 	}
 
 	DB = pool
-	log.Println("✅ Connected to PostgreSQL via pgxpool")
 }

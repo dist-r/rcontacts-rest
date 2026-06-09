@@ -18,17 +18,29 @@ import (
 func SetupApp() {
 	godotenv.Load()
 	config.InitDB()
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
 
-			// Defualt Err
+	logConfig := app.NewLogConfig()
+	appLogger := app.InitLogger(logConfig)
+	appLogger.Info("Logger initialized", "level", logConfig.Level.String(), "format", logConfig.Format)
+
+	// Create Fiber App
+	fiberApp := fiber.New(fiber.Config{
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			// Default Err
 			code := fiber.StatusInternalServerError
 			message := "Internal Server Error"
+
 			// Custom Err
 			var appErr *app.AppError
 			if ok := errors.As(err, &appErr); ok {
 				code = appErr.Code
 				message = appErr.Msg
+				appLogger.Error("Application error occurred",
+					"code", code,
+					"message", message,
+					"path", c.Path(),
+					"method", c.Method(),
+				)
 			}
 
 			// Fiber err
@@ -37,16 +49,25 @@ func SetupApp() {
 				message = e.Message
 			}
 
-			return c.Status(code).JSON(fiber.Map{
-				"code":    code,
-				"message": message,
-			})
+			response := app.APIResponse[any]{
+				Success: false,
+				Message: message,
+				Data:    nil,
+			}
+
+			appLogger.Error(err.Error(),
+				"code", code,
+				"message", message,
+				"path", c.Path(),
+				"method", c.Method(),
+			)
+			return c.Status(code).JSON(response)
 		},
 	})
 
 	// GLOBAL MIDDLEWARES
 	// CORS
-	app.Use(cors.New(
+	fiberApp.Use(cors.New(
 		cors.Config{
 			AllowOrigins: "*",
 			AllowHeaders: "*",
@@ -55,29 +76,34 @@ func SetupApp() {
 	))
 
 	// LOG
-	app.Use(logger.New())
+	fiberApp.Use(logger.New())
 
 	// RECOVERY
-	app.Use(recover.New())
+	fiberApp.Use(recover.New())
 
 	// WIRING DEPENDENCIES
+	appLogger.Info("Starting dependency injection")
 
 	// USER
-	dbUser := raw.NewPGRawUserRepository(config.DB)
-	userService := user.NewUserService(dbUser)
+	dbUser := raw.NewPGRawUserRepository(config.DB, appLogger)
+	userService := user.NewUserService(dbUser, appLogger)
 	userHandler := user.NewUserHandler(*userService)
+	appLogger.Debug("User dependencies initialized")
 
 	// CONTACT
-	dbContact := raw.NewPGRawContactRepository(config.DB)
-	contactService := contact.NewContactService(dbContact)
+	dbContact := raw.NewPGRawContactRepository(config.DB, appLogger)
+	contactService := contact.NewContactService(dbContact, appLogger)
 	contactHandler := contact.NewContactHandler(*contactService)
+	appLogger.Debug("Contact dependencies initialized")
 
 	// REGISTER ROUTES
-	rootRoutes := app.Group("/api/v1")
+	appLogger.Info("Registering API routes")
+	rootRoutes := fiberApp.Group("/api/v2")
 	user.UserRoutes(rootRoutes, userHandler)
 	contact.ContactRoutes(rootRoutes, contactHandler)
 
-	if err := app.Listen(":3000"); err != nil {
+	if err := fiberApp.Listen(":3000"); err != nil {
+		appLogger.Error("Server error", "error", err.Error())
 		panic(err)
 	}
 }

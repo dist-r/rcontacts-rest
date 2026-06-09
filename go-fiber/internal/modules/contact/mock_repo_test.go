@@ -3,14 +3,14 @@ package contact
 import "context"
 
 type MockContactRepository struct {
-	CreateContactFunc          func(ctx context.Context, c *Contact) error
+	CreateContactFunc          func(ctx context.Context, c *Contact) (*Contact, error)
 	GetContactByIDFunc         func(ctx context.Context, id string) (*Contact, error)
 	GetAllContactsByUserIDFunc func(ctx context.Context, userID string) ([]*Contact, error)
-	UpdateContactFunc          func(ctx context.Context, c *Contact) error
+	UpdateContactFunc          func(ctx context.Context, c *Contact) (*Contact, error)
 	DeleteContactFunc          func(ctx context.Context, id string) error
 }
 
-func (m *MockContactRepository) CreateContact(ctx context.Context, c *Contact) error {
+func (m *MockContactRepository) CreateContact(ctx context.Context, c *Contact) (*Contact, error) {
 	return m.CreateContactFunc(ctx, c)
 }
 
@@ -22,7 +22,7 @@ func (m *MockContactRepository) GetAllContactsByUserID(ctx context.Context, user
 	return m.GetAllContactsByUserIDFunc(ctx, userID)
 }
 
-func (m *MockContactRepository) UpdateContact(ctx context.Context, c *Contact) error {
+func (m *MockContactRepository) UpdateContact(ctx context.Context, c *Contact) (*Contact, error) {
 	return m.UpdateContactFunc(ctx, c)
 }
 
