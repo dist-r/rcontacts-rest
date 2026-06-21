@@ -1,0 +1,13 @@
+CREATE TABLE contacts (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  user_id VARCHAR(36),
+  
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+
+);
