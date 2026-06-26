@@ -1,5 +1,7 @@
 version: '3.8'
 services:
+
+  # RUN POSTRGRESQL
   postgres:
     image: postgres:latest
     container_name: pgdb
@@ -8,7 +10,18 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ../../migration:/docker-entrypoint-initdb.d
+      - ../../migration/postgres:/docker-entrypoint-initdb.d
+
+
+  mysql:
+    image: mysql:latest
+    container_name: mysqldb
+    env_file:
+      - ../.env
+    ports:
+      - 3306:3306
+    volumes:
+      - ../../migration/mysql:/docker-entrypoint-initdb.d
 
   # mongodb:
   #   image: mongo:latest
@@ -20,6 +33,7 @@ services:
     # volumes:
     #   - ./mongo-init:/docker-entrypoint-initdb.d 
 
+  
   app:
     build:
       context: ..
@@ -33,3 +47,4 @@ services:
       - 3000:3000
     depends_on:
       - postgres
+  

@@ -19,10 +19,11 @@ func NewContactService(repo ContactRepository) *ContactService {
 
 func (cs *ContactService) CreateContact(ctx context.Context, data *CreateContactDto, userId string) (*Contact, error) {
 	newContact := &Contact{
-		ID:    uuid.New().String(),
-		Name:  data.Name,
-		Email: data.Email,
-		Phone: data.Phone,
+		ID:     uuid.New().String(),
+		UserID: userId,
+		Name:   data.Name,
+		Email:  data.Email,
+		Phone:  data.Phone,
 	}
 	result, err := cs.repo.Save(ctx, newContact)
 	if err != nil {

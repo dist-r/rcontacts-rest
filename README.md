@@ -8,6 +8,7 @@
 ![Made with Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Made with Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Made with Fiber](https://img.shields.io/badge/Fiber-00ADD8?style=for-the-badge&logo=fiber&logoColor=white)
+![Made with Gin](https://img.shields.io/badge/Gin-%2300ADD8.svg?style=for-the-badge&logo=gin&logoColor=white)
 ![Made with TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Made with PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Made with MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
@@ -16,28 +17,25 @@
 ![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
 ![Raw SQL](https://img.shields.io/badge/Raw--SQL-gray?style=for-the-badge&logo=postgresql&logoColor=white)
 
-Repository containing REST API implementations for a contact-management app (`rcontacts-rest`). There are multiple server implementations in this repo:
+Repository containing REST API implementations for a contact-management app (`rcontacts-rest`). The implementations in this repo are compatible with the current client application and support a common API format.
 
 - `bun-hono` – TypeScript implementation using Bun + Hono.
 - `go-fiber` – Go implementation using Fiber.
-- `spring-java` – Java implementation using Spring Boot (on progress).
-- `aspdotnet` - C# implementation using ASP.NET Core.
-- `express` - TypeScript implementation using Node.js + Express.
+- `go-gin` – Go implementation using Gin.
+- `spring-java` – Java implementation using Spring Boot.
+- `aspdotnet` – C# implementation using ASP.NET Core.
+- `express` – TypeScript implementation using Node.js + Express.
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
 
 **Client implementation:** https://github.com/dist-r/rcontacts-client
 
 The frontend/client for this API is published at the link above. You can use it to interact with this API or as a reference.
-
-> [!IMPORTANT]
-> The `bun-hono`, `go-fiber`, `spring-java`, `aspdotnet`, and `express` implementations already use the API v2 response format. Because of that response change, they are probably not fully compatible with the current client application yet. Client integration and API v2 usage are still in progress.
 
 ## Bun Hono Implementation
 
@@ -50,7 +48,7 @@ The frontend/client for this API is published at the link above. You can use it 
 A high-performance REST API implementation using Bun runtime and Hono framework. This project showcases a lightweight, fast alternative to traditional Node.js server implementations with support for multiple database backends and ORM options.
 
 > [!IMPORTANT]
-> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
+> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -107,7 +105,7 @@ docker compose -f bun-hono/docker/docker-compose.yml up -d --build
 A production-ready REST API built with Go and Fiber framework, designed for optimal performance and concurrency. This implementation demonstrates Go's strengths in building scalable backend services with excellent memory efficiency and fast execution.
 
 > [!IMPORTANT]
-> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
+> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -139,18 +137,57 @@ The service listens on port `3000` by default.
 docker compose -f go-fiber/docker/docker-compose.yml up -d --build
 ```
 
+## Go Gin Implementation
+
+![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Gin](https://img.shields.io/badge/Gin-%2300ADD8.svg?style=for-the-badge&logo=gin&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
+**Implemented by Uzumaki Bayu (admin)**
+
+A REST API implementation using Go and Gin framework. This implementation is built around raw MySQL access, modular services, and JWT authentication.
+
+> [!IMPORTANT]
+> This implementation uses the API v2 response format and is compatible with the current client application.
+
+### How to Run
+
+#### Prerequisites
+- Go 1.25+
+- MySQL database
+
+#### Run Locally
+1. Navigate to the folder:
+   ```bash
+   cd go-gin
+   ```
+
+2. Run the application:
+   ```bash
+   go run ./cmd
+   ```
+
+The service listens on `http://localhost:3000` by default.
+
+#### Run with Docker Compose
+```bash
+docker compose -f go-gin/docker/docker-compose.yml up -d --build
+```
+
 ### Technologies Supported
 
-- **SQL Databases:**
-  - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) PostgreSQL (implemented with raw SQL)
-  - ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) MySQL (planned)
+- **Framework and Language:**
+  - ![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white) Go
+  - ![Gin](https://img.shields.io/badge/Gin-%2300ADD8.svg?style=for-the-badge&logo=gin&logoColor=white) Gin
 
-- **NoSQL Databases:**
-  - ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) MongoDB (planned)
+- **SQL Databases:**
+  - ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) MySQL (implemented with raw SQL)
+
+- **Authentication and API Docs:**
+  - ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white) JWT Bearer Authentication
 
 - **ORM/Data Layers:**
   - Raw SQL (implemented)
-  - ORM integration (planned)
 
 ## Spring Java Implementation
 
@@ -164,7 +201,7 @@ docker compose -f go-fiber/docker/docker-compose.yml up -d --build
 An enterprise-grade REST API implementation using Spring Boot framework with Java. This project demonstrates best practices for building scalable, maintainable backend services with modern Spring ecosystem components.
 
 > [!IMPORTANT]
-> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
+> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -215,7 +252,7 @@ docker compose -f spring-java/docker/docker-compose.yml up -d --build
 A REST API implementation using C#, .NET 8, and ASP.NET Core. This implementation uses controllers, services, repositories, JWT authentication, Swagger/OpenAPI documentation, and raw PostgreSQL access through Npgsql.
 
 > [!IMPORTANT]
-> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
+> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -271,7 +308,7 @@ The service listens on `http://localhost:5226` by default for the `http` launch 
 A REST API implementation using Node.js, Express, and TypeScript. This implementation follows a modular structure with controllers, services, repositories, middleware, JWT authentication, and raw PostgreSQL data access.
 
 > [!IMPORTANT]
-> This implementation uses the API v2 response format, so it is probably not fully supported by the current client application yet. Client integration is still in progress.
+> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -325,8 +362,6 @@ docker compose -f express/docker/docker-compose.yml up -d --build
 
 ## Upcoming Implementations
 
-- `nest-nodejs` – Node.js implementation using NestJS (coming soon).
-- `go-gin` – go implementation using Gin (coming soon).
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
 - `nest-nodejs` – Node.js implementation using NestJS (coming soon).
 - `php-laravel` – PHP implementation using Laravel (coming soon).

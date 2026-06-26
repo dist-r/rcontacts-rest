@@ -45,10 +45,10 @@ func (r *MySQLRawContactRepository) FindByEmail(ctx context.Context, email strin
 
 func (r *MySQLRawContactRepository) Save(ctx context.Context, contact *contact.Contact) (*contact.Contact, error) {
 	query := `
-		INSERT INTO contacts (id, name, email, phone)
-		VALUES (?, ?, ?, ?)
+		INSERT INTO contacts (id, user_id, name, email, phone)
+		VALUES (?, ?, ?, ?, ?)
 	`
-	_, err := r.db.ExecContext(ctx, query, contact.ID, contact.Name, contact.Email, contact.Phone)
+	_, err := r.db.ExecContext(ctx, query, contact.ID, contact.UserID, contact.Name, contact.Email, contact.Phone)
 	if err != nil {
 		return nil, err
 	}

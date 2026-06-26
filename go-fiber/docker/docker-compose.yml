@@ -10,6 +10,17 @@ services:
     volumes:
       - ../../migration:/docker-entrypoint-initdb.d
 
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysqldb
+    env_file:
+      - ../.env
+    ports:
+      - 3306:3306
+    volumes:
+      - ../../migration/mysql:/docker-entrypoint-initdb.d
+
   app:
     build:
       context: ..

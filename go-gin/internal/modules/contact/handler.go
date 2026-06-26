@@ -104,5 +104,21 @@ func (h *ContactHandler) UpdateContact(c *gin.Context) {
 }
 
 func (h *ContactHandler) DeleteContact(c *gin.Context) {
+	contactId := c.Param("id")
+	if contactId == "" {
+		c.Error(app.NewError(400, "Contact ID is required"))
+		return
+	}
 
+	err := h.service.DeleteContact(c.Request.Context(), contactId)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, app.APIResponse[any]{
+		Success: true,
+		Message: "Success",
+		Data:    nil,
+	})
 }
