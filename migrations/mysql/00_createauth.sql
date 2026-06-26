@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS mysqldb;
+
+CREATE USER IF NOT EXISTS 'mysqldb'@'%' IDENTIFIED BY 'mysqldb';
+
+GRANT ALL PRIVILEGES ON mysqldb.* TO 'mysqldb'@'%';
+
+FLUSH PRIVILEGES;

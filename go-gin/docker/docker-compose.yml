@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    env_file:
+      - ../.env
+    ports:
+      - 3306:3306
+    volumes:
+      - ../migrations/mysql:/docker-entrypoint-initdb.d
+
+  postgres:
+    image: postgres:latest
+    container_name: pgdb
+    env_file:
+      - ../.env
+    ports:
+      - 5432:5432
+    volumes:
+      - ../../migrations/postgres:/docker-entrypoint-initdb.d
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    env_file:
+      - ../.env
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - ./mongo-init:/docker-entrypoint-initdb.d 
+
+  # app:
+  #   build:
+  #     context: ..
+  #     dockerfile: ./docker/Dockerfile
+  #   container_name: bun-hono-app
+  #   env_file:
+  #     - ../.env
+  #   environment:
+  #     - DOCKER_ENV=true
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - postgres
