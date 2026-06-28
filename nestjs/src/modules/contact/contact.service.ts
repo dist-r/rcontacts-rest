@@ -2,8 +2,11 @@ import {Injectable} from '@nestjs/common';
 
 @Injectable()
 export class ContactService {
-  async getAllContacts() {
-    return { message: "Get all contacts" };
+
+  constructor() {}
+  
+  async getAllContacts(userId: string) {
+    
   }
 
   async getContactById(id: string) {
