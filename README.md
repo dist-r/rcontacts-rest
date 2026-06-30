@@ -6,6 +6,7 @@
 ![Made with Hono](https://img.shields.io/badge/Hono-%23E36002.svg?style=for-the-badge&logo=hono)
 ![Made with Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![Made with Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Made with NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![Made with Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Made with Fiber](https://img.shields.io/badge/Fiber-00ADD8?style=for-the-badge&logo=fiber&logoColor=white)
 ![Made with Gin](https://img.shields.io/badge/Gin-%2300ADD8.svg?style=for-the-badge&logo=gin&logoColor=white)
@@ -31,6 +32,7 @@ Repository containing REST API implementations for a contact-management app (`rc
 - `spring-java` – Java implementation using Spring Boot.
 - `aspdotnet` – C# implementation using ASP.NET Core.
 - `express` – TypeScript implementation using Node.js + Express.
+- `nestjs` – TypeScript implementation using NestJS.
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
 
 **Client implementation:** https://github.com/dist-r/rcontacts-client
@@ -46,9 +48,6 @@ The frontend/client for this API is published at the link above. You can use it 
 **Implemented by Uzumaki Bayu (admin)**
 
 A high-performance REST API implementation using Bun runtime and Hono framework. This project showcases a lightweight, fast alternative to traditional Node.js server implementations with support for multiple database backends and ORM options.
-
-> [!IMPORTANT]
-> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -104,9 +103,6 @@ docker compose -f bun-hono/docker/docker-compose.yml up -d --build
 
 A production-ready REST API built with Go and Fiber framework, designed for optimal performance and concurrency. This implementation demonstrates Go's strengths in building scalable backend services with excellent memory efficiency and fast execution.
 
-> [!IMPORTANT]
-> This implementation uses the API v2 response format and is compatible with the current client application.
-
 ### How to Run
 
 #### Prerequisites
@@ -146,9 +142,6 @@ docker compose -f go-fiber/docker/docker-compose.yml up -d --build
 **Implemented by Uzumaki Bayu (admin)**
 
 A REST API implementation using Go and Gin framework. This implementation is built around raw MySQL access, modular services, and JWT authentication.
-
-> [!IMPORTANT]
-> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -200,9 +193,6 @@ docker compose -f go-gin/docker/docker-compose.yml up -d --build
 
 An enterprise-grade REST API implementation using Spring Boot framework with Java. This project demonstrates best practices for building scalable, maintainable backend services with modern Spring ecosystem components.
 
-> [!IMPORTANT]
-> This implementation uses the API v2 response format and is compatible with the current client application.
-
 ### How to Run
 
 #### Prerequisites
@@ -250,9 +240,6 @@ docker compose -f spring-java/docker/docker-compose.yml up -d --build
 **Implemented by Uzumaki Bayu (admin)**
 
 A REST API implementation using C#, .NET 8, and ASP.NET Core. This implementation uses controllers, services, repositories, JWT authentication, Swagger/OpenAPI documentation, and raw PostgreSQL access through Npgsql.
-
-> [!IMPORTANT]
-> This implementation uses the API v2 response format and is compatible with the current client application.
 
 ### How to Run
 
@@ -307,9 +294,6 @@ The service listens on `http://localhost:5226` by default for the `http` launch 
 
 A REST API implementation using Node.js, Express, and TypeScript. This implementation follows a modular structure with controllers, services, repositories, middleware, JWT authentication, and raw PostgreSQL data access.
 
-> [!IMPORTANT]
-> This implementation uses the API v2 response format and is compatible with the current client application.
-
 ### How to Run
 
 #### Prerequisites
@@ -360,10 +344,60 @@ docker compose -f express/docker/docker-compose.yml up -d --build
   - Raw SQL (implemented)
   - Prisma (planned)
 
+## NestJS Implementation
+
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+
+**Implemented by Uzumaki Bayu (admin)**
+
+A progressive REST API implementation using NestJS framework, Node.js, and TypeScript. This implementation demonstrates NestJS modules, controllers, providers, custom exception filters, guards, JWT authentication, and raw PostgreSQL data access.
+
+### How to Run
+
+#### Prerequisites
+- Node.js
+- npm
+- PostgreSQL database
+
+#### Run Locally
+1. Navigate to the folder:
+   ```bash
+   cd nestjs
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run development server:
+   ```bash
+   npm run start:dev
+   ```
+
+The service listens on `http://localhost:3000` by default.
+
+### Technologies Supported
+
+- **Framework and Language:**
+  - ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white) NestJS
+  - ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) TypeScript
+
+- **SQL Databases:**
+  - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) PostgreSQL (implemented with raw SQL)
+
+- **Authentication and API Docs:**
+  - ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white) JWT Bearer Authentication
+
+- **ORM/Data Layers:**
+  - Raw SQL (implemented)
+
 ## Upcoming Implementations
 
 - `python-fastapi` – Python implementation using FastAPI (coming soon).
-- `nest-nodejs` – Node.js implementation using NestJS (coming soon).
 - `php-laravel` – PHP implementation using Laravel (coming soon).
 
 ---
