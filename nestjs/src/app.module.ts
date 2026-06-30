@@ -8,8 +8,7 @@ import { CommonModule } from './common/common.module';
   imports: [AuthModule, UserModule, ContactModule, CommonModule],
 })
 export class AppModule implements NestModule {
-
-  configure(consumer: MiddlewareConsumer ) {
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
-  } 
+  }
 }

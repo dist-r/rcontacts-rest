@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 export class BcryptUtil {
   static SALT_ROUNDS = 10;
@@ -11,7 +11,7 @@ export class BcryptUtil {
 
   static async comparePassword(
     password: string,
-    hashedPassword: string
+    hashedPassword: string,
   ): Promise<boolean> {
     const isTrue = await bcrypt.compare(password, hashedPassword);
     return isTrue;

@@ -4,22 +4,18 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-} from "@nestjs/common";
-import { AppError } from "src/shared/app.error";
-import { ApiResponse } from "src/shared/api.response";
+} from '@nestjs/common';
+import { AppError } from 'src/shared/app.error';
+import { ApiResponse } from 'src/shared/api.response';
+import { Response } from 'express';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-
   catch(exception: unknown, host: ArgumentsHost) {
-
     const ctx = host.switchToHttp();
-
-    const response = ctx.getResponse();
-
+    const response = ctx.getResponse<Response>();
     let statusDefault = HttpStatus.INTERNAL_SERVER_ERROR;
-
-    let messageDefault = "Internal server error";
+    let messageDefault = 'Internal server error';
 
     if (exception instanceof AppError) {
       statusDefault = exception.code;
@@ -31,8 +27,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       messageDefault = exception.message;
     }
 
-    response.status(statusDefault).json(
-      new ApiResponse<null>(false, messageDefault, null)
-    );
+    response
+      .status(statusDefault)
+      .json(new ApiResponse<null>(false, messageDefault, null));
   }
 }

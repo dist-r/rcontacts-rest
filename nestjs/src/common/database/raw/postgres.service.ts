@@ -1,17 +1,16 @@
-import { pgPool } from "src/config/database/postgresql.config";
-import { Injectable } from "@nestjs/common";
-  
+import { pgPool } from 'src/config/database/postgresql.config';
+import { Injectable } from '@nestjs/common';
+import { QueryResultRow } from 'pg';
+
 @Injectable()
 export class PostgresService {
-
   private pool = pgPool;
 
-  async query(query: string, params?: any[]): Promise<any> {
-    try {
-      const result = await this.pool.query(query, params);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
+  async query<T extends QueryResultRow>(
+    query: string,
+    params?: any[],
+  ): Promise<T[]> {
+    const result = await this.pool.query<T>(query, params);
+    return result.rows;
   }
 }
