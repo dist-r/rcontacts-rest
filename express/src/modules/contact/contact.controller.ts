@@ -2,7 +2,7 @@ import ContactService from "./contact.service";
 import { Request, Response } from "express";
 import { CreateContactDto, UpdateContactDto, DeleteContactDto } from "./contact.dto";
 import { CreateContactType, UpdateContactType, DeleteContactType } from "./contact.dto";
-import {CreateContactResponseDto, UpdateContactResponseDto, DeleteContactResponseDto, GetAllContactsResponseDto} from "./contact.dto";
+import {CreateContactResponseDto, UpdateContactResponseDto, GetAllContactsResponseDto} from "./contact.dto";
 import ApiResponse from "../../shared/api.response";
 
 class ContactController {

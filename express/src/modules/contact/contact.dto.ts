@@ -1,6 +1,4 @@
-import e from "express";
 import {z} from "zod";
-import { id } from "zod/v4/locales";
 
 export const CreateContactType = z.object({
   name: z.string().min(1, 'Name is required'),
